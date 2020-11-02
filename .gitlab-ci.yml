@@ -1,0 +1,31 @@
+image: node:latest
+
+before_script:
+  - npm install
+
+stages:
+  - lint
+  - release
+
+cache:
+  paths:
+    - node_modules/
+
+eslint:
+  stage: lint
+  script:
+    - |
+      npm i eslint \
+      eslint-config-airbnb-base \
+      eslint-plugin-import
+    - node_modules/eslint/bin/eslint.js .
+
+release:
+  stage: release
+  only:
+    - tags
+  script:
+    - git config --global user.email "ci-cd@dimin.com"
+    - git config --global user.name "CI / CD"
+    - npm version --no-git-tag-version --new-version $CI_COMMIT_TAG --force --allow-same-version
+    - npm publish
