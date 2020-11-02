@@ -1,0 +1,39 @@
+{
+  "name": "@dimensional-innovations/vue-electron-background",
+  "version": "0.0.1",
+  "description": "the background script for vue electron apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/dimensional-innovations/vue-electron-background.git"
+  },
+  "keywords": [
+    "vue",
+    "electron",
+    "background"
+  ],
+  "author": "Joe Longstreet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/dimensional-innovations/vue-electron-background/issues"
+  },
+  "homepage": "https://gitlab.com/dimensional-innovations/vue-electron-background#readme",
+  "dependencies": {
+    "electron": "^9.0.0",
+    "electron-settings": "^4.0.1",
+    "electron-devtools-installer": "^3.1.1",
+    "vue-cli-plugin-electron-builder": "~2.0.0-rc.2",
+    "electron-updater": "^4.3.5"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "publishConfig": {
+    "@dimensional-innovations:registry": "https://gitlab.com/api/v4/projects/22189852/packages/npm/"
+  }
+}
