@@ -9,7 +9,7 @@ npm install @dimensional-innovations/vue-electron-background -S
 ```
 
 Default setup with a development environment
-```
+```javascript
 import {
   init,
   environment,
