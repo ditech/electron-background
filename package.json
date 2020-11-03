@@ -1,6 +1,6 @@
 {
   "name": "@dimensional-innovations/vue-electron-background",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "the background script for vue electron apps",
   "main": "index.js",
   "scripts": {
@@ -32,8 +32,5 @@
     "eslint": "^7.11.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1"
-  },
-  "publishConfig": {
-    "@dimensional-innovations:registry": "https://gitlab.com/api/v4/projects/22189852/packages/npm/"
   }
 }
