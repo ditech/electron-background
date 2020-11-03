@@ -28,7 +28,7 @@ async function getProjectPackageJsonConfig() {
 // setup configurable default window options
 // if running in a production environment, add properties for full
 // screen kiosk mode with an unclosable window
-async function getWindowOptions(browserWindowOptionOverrides, isDevelopment) {
+async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
   const {
     appWidth, appHeight, backgroundColor,
   } = await settings.get('config');
@@ -50,7 +50,7 @@ async function getWindowOptions(browserWindowOptionOverrides, isDevelopment) {
     },
   };
 
-  if (!isDevelopment) {
+  if (enableKioskMode) {
     return {
       ...windowOptions,
       acceptFirstMouse: true,
@@ -73,22 +73,13 @@ async function getWindowOptions(browserWindowOptionOverrides, isDevelopment) {
   };
 }
 
-export const environment = {
-  DEVELOPMENT: 'dev',
-  TEST: 'test',
-  PRODUCTION: 'production',
-};
-
-export async function init({
+export default async function init({
   enableTouchEvents = true,
   enableAutoUpdater = true,
+  enableKioskMode = false,
   registerSchemesAsPrivileged = true,
   browserWindowOptionOverrides = {},
-  env = environment.DEVELOPMENT,
 }) {
-  // Determine the environment
-  const isDevelopment = env === environment.DEVELOPMENT;
-
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
   if (registerSchemesAsPrivileged) {
@@ -115,10 +106,10 @@ export async function init({
 
   // create the browser window with the correct options
   let browserWindow = new BrowserWindow(
-    await getWindowOptions(browserWindowOptionOverrides, isDevelopment),
+    await getWindowOptions(browserWindowOptionOverrides, enableKioskMode),
   );
 
-  // open the correct url dependent on environment
+  // open the dev server url if it's available (if the app is running in dev mode)
   if (WEBPACK_DEV_SERVER_URL) {
     installExtension(VUEJS_DEVTOOLS);
     browserWindow.loadURL(WEBPACK_DEV_SERVER_URL);
