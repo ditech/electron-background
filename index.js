@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import settings from 'electron-settings';
 import { app, protocol, BrowserWindow } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
@@ -9,21 +7,6 @@ import { autoUpdater } from 'electron-updater';
 // https://github.com/webpack/webpack/issues/5392
 // eslint-disable-next-line prefer-destructuring
 const WEBPACK_DEV_SERVER_URL = process.env.WEBPACK_DEV_SERVER_URL;
-
-// read the project's root package.json to determine configs
-async function getProjectPackageJsonConfig() {
-  const filePath = path.join(process.cwd(), 'package.json');
-
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, file) => {
-      if (err) reject(err);
-
-      const json = JSON.parse(file);
-      if (!json.config) reject(new Error('No config found'));
-      else resolve(json.config);
-    });
-  });
-}
 
 // setup configurable default window options
 // if running in a production environment, add properties for full
@@ -100,8 +83,7 @@ export default async function init({
 
   // check to see if any previous config settings have been set if not, set them
   if (!settings.has('config')) {
-    const config = await getProjectPackageJsonConfig();
-    settings.set('config', config);
+    settings.set('config', {});
   }
 
   // create the browser window with the correct options
