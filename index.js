@@ -82,7 +82,7 @@ export async function init({
   await app.whenReady();
 
   // check to see if any previous config settings have been set if not, set them
-  if (!settings.has('config')) {
+  if (!await settings.has('config')) {
     await settings.set('config', config);
   }
 
