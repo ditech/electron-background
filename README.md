@@ -7,36 +7,18 @@ Install
 npm install @dimensional-innovations/vue-electron-background -S
 ```
 
-Default setup
+Default setup. Only enables kiosk mode and the auto updater in production like (the app is packaged) environments.
 ```javascript
 import { init } from '@dimensional-innovations/vue-electron-background';
-import { config } from '../package';
-
-init({ config });
-```
-
-Disable the auto update feature
-```javascript
-import { init } from '@dimensional-innovations/vue-electron-background';
+import { app } from 'electron';
 import { config } from '../package';
 
 init({
-  enableAutoUpdater: false,
+  enableKioskMode: app.isPackaged,
+  enableAutoUpdater: app.isPackaged,
   config,
 });
 ```
-
-Only enable kiosk mode in production environments
-```javascript
-import { init } from '@dimensional-innovations/vue-electron-background';
-import { config } from '../package';
-
-init({
-  enableKioskMode: process.env === 'production',
-  config,
-});
-```
-
 
 ## Features
 This package acts as the default background script for vue-electron projects at DI. It does the following:
