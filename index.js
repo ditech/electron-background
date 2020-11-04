@@ -3,6 +3,7 @@ import { app, protocol, BrowserWindow } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { autoUpdater } from 'electron-updater';
+import electronLog from 'electron-log';
 
 // https://github.com/webpack/webpack/issues/5392
 // eslint-disable-next-line prefer-destructuring
@@ -56,7 +57,9 @@ async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
   };
 }
 
-export default async function init({
+// eslint-disable-next-line import/prefer-default-export
+export async function init({
+  config = {},
   enableTouchEvents = true,
   enableAutoUpdater = true,
   enableKioskMode = false,
@@ -78,12 +81,9 @@ export default async function init({
 
   await app.whenReady();
 
-  // tell the audo updater to periodically check for updates
-  if (enableAutoUpdater) autoUpdater.checkForUpdates();
-
   // check to see if any previous config settings have been set if not, set them
   if (!settings.has('config')) {
-    settings.set('config', {});
+    settings.set('config', config);
   }
 
   // create the browser window with the correct options
@@ -108,14 +108,31 @@ export default async function init({
   });
 
   // setup the auto updater, allowing this app to be updated from pushes to an S3 bucket
-  // quit the app and update immediately
+  // quit the app and update immediately update
   // https://www.electron.build/auto-update
   if (enableAutoUpdater) {
+    const threeMinutes = 180000;
+
     const { autoUpdaterChannel } = await settings.get('config');
     autoUpdater.channel = autoUpdaterChannel;
-    autoUpdater.on('update-available', () => {
+    autoUpdater.autoDownload = true;
+    autoUpdater.logger = electronLog;
+
+    autoUpdater.on('update-downloaded', () => {
+      electronLog.info('Updated app downloaded... restarting');
+      // https://www.electron.build/auto-update#module_electron-updater.AppUpdater+quitAndInstall
       autoUpdater.quitAndInstall(true, true);
     });
+
+    autoUpdater.on('update-not-available', () => {
+      electronLog.info('No update available. Will try again soon.');
+    });
+
+    // check for updates now and then every 3 minutes
+    autoUpdater.checkForUpdates();
+    setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, threeMinutes);
   }
 
   // enable touch events

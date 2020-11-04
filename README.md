@@ -9,20 +9,32 @@ npm install @dimensional-innovations/vue-electron-background -S
 
 Default setup
 ```javascript
-import background from '@dimensional-innovations/vue-electron-background';
-background();
+import { init } from '@dimensional-innovations/vue-electron-background';
+import { config } from '../package';
+
+init({ config });
 ```
 
 Disable the auto update feature
 ```javascript
-import background from '@dimensional-innovations/vue-electron-background';
-background({ enableAutoUpdater: false });
+import { init } from '@dimensional-innovations/vue-electron-background';
+import { config } from '../package';
+
+init({
+  enableAutoUpdater: false,
+  config,
+});
 ```
 
 Only enable kiosk mode in production environments
 ```javascript
-import background from '@dimensional-innovations/vue-electron-background';
-background({ enableKioskMode: process.env === 'production' });
+import { init } from '@dimensional-innovations/vue-electron-background';
+import { config } from '../package';
+
+init({
+  enableKioskMode: process.env === 'production',
+  config,
+});
 ```
 
 
