@@ -31,7 +31,7 @@ async function getProjectPackageJsonConfig() {
 async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
   const {
     appWidth, appHeight, backgroundColor,
-  } = await settings.get('config');
+  } = await settings.get('config') || {};
 
   const windowDefaults = {
     width: 1920,
