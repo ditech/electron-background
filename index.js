@@ -83,7 +83,7 @@ export async function init({
 
   // check to see if any previous config settings have been set if not, set them
   if (!settings.has('config')) {
-    settings.set('config', config);
+    await settings.set('config', config);
   }
 
   // create the browser window with the correct options
