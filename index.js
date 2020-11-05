@@ -40,7 +40,6 @@ async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
       acceptFirstMouse: true,
       alwaysOnTop: true,
       autoHideMenuBar: true,
-      closable: false,
       fullscreen: true,
       kiosk: true,
       minimizable: false,
@@ -48,6 +47,7 @@ async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
       x: 0,
       y: 0,
       ...browserWindowOptionOverrides,
+      closable: true, // !!! enabling will break auto updating !!!
     };
   }
 
