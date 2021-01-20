@@ -31,6 +31,7 @@ async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
+      webSecurity: false,
     },
   };
 
