@@ -1,7 +1,4 @@
-image: node:14.15.4
-
-before_script:
-  - npm install
+image: node:12.20.1
 
 stages:
   - lint
@@ -11,27 +8,16 @@ cache:
   paths:
     - node_modules/
 
-eslint:
+include:
+  - project: 'dimensional-innovations/ci-cd'
+    ref: master
+    file: '/javascript/release-package.yml'
+  - project: 'dimensional-innovations/ci-cd'
+    ref: master
+    file: '/javascript/auth-with-di-package-registry.yml'
+
+lint:
   stage: lint
   script:
-    - |
-      npm i eslint \
-      eslint-config-airbnb-base \
-      eslint-plugin-import
-    - node_modules/eslint/bin/eslint.js .
-
-release:
-  stage: release
-  only:
-    - tags
-  script:
-    - |
-      {
-        echo '@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_SERVER_PROTOCOL}://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/'
-        echo '//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}'
-        echo '//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'
-      } >> .npmrc
-    - git config --global user.email "ci-cd@dimin.com"
-    - git config --global user.name "CI / CD"
-    - npm version --no-git-tag-version --new-version $CI_COMMIT_TAG --force --allow-same-version
-    - npm publish
+    - yarn install
+    - npx eslint .
