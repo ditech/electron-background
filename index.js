@@ -95,7 +95,7 @@ export async function init({
   // open the dev server url if it's available (if the app is running in dev mode)
   if (WEBPACK_DEV_SERVER_URL) {
     installExtension(VUEJS_DEVTOOLS);
-    browserWindow.loadURL(WEBPACK_DEV_SERVER_URL);
+    await browserWindow.loadURL(WEBPACK_DEV_SERVER_URL);
     browserWindow.webContents.openDevTools();
   } else {
     createProtocol('app');
