@@ -15,7 +15,7 @@
     "electron",
     "background"
   ],
-  "author": "Joe Longstreet",
+  "author": "Edgar Esparza",
   "license": "ISC",
   "bugs": {
     "url": "https://gitlab.com/dimensional-innovations/vue-electron-background/issues"
