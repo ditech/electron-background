@@ -3,6 +3,7 @@
   "version": "0.0.9",
   "description": "the background script for vue electron apps",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix"
