@@ -66,7 +66,7 @@ export async function init({
   enableKioskMode = false,
   registerSchemesAsPrivileged = true,
   browserWindowOptionOverrides = {},
-  devTools = [VUEJS_DEVTOOLS]
+  devTools = [VUEJS_DEVTOOLS],
 }) {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
