@@ -7,6 +7,10 @@ Install
 npm install @dimensional-innovations/vue-electron-background -S
 ```
 
+```bash
+yarn add @dimensional-innovations/vue-electron-background
+```
+
 Default setup. Only enables kiosk mode and the auto updater in production like (the app is packaged) environments.
 ```javascript
 import { init } from '@dimensional-innovations/vue-electron-background';
