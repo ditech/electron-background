@@ -1,5 +1,5 @@
 import { BrowserViewConstructorOptions } from 'electron';
-import { ExtensionReference } from 'electron-devtools-installer';
+import { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 
 declare module '@dimensional-innovations/vue-electron-background' {
   export interface InitOptions {
@@ -9,7 +9,7 @@ declare module '@dimensional-innovations/vue-electron-background' {
     enableKioskMode?: boolean;
     registerSchemesAsPrivileged?: boolean;
     browserWindowOptionOverrides?: Partial<BrowserViewConstructorOptions>;
-    devTools?: Array<string | ExtensionReference>;
+    devTools?: Array<string | typeof VUEJS_DEVTOOLS>;
   }
 
   export function init(options: InitOptions): void;
