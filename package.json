@@ -4,7 +4,8 @@
   "description": "the background script for vue electron apps",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix"
   },
   "repository": {
     "type": "git",
