@@ -66,6 +66,7 @@ export async function init({
   enableKioskMode = false,
   registerSchemesAsPrivileged = true,
   browserWindowOptionOverrides = {},
+  devTools = [VUEJS_DEVTOOLS],
 }) {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
@@ -93,8 +94,10 @@ export async function init({
   );
 
   // open the dev server url if it's available (if the app is running in dev mode)
+  if (WEBPACK_DEV_SERVER_URL && !!devTools) {
+    await installExtension(devTools);
+  }
   if (WEBPACK_DEV_SERVER_URL) {
-    installExtension(VUEJS_DEVTOOLS);
     await browserWindow.loadURL(WEBPACK_DEV_SERVER_URL);
     browserWindow.webContents.openDevTools();
   } else {
