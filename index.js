@@ -30,6 +30,7 @@ async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
     backgroundColor,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       enableRemoteModule: true,
       webSecurity: false,
     },
