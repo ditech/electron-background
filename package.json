@@ -1,6 +1,6 @@
 {
   "name": "@dimensional-innovations/vue-electron-background",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "the background script for vue electron apps",
   "main": "index.js",
   "types": "index.d.ts",
