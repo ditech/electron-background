@@ -1,4 +1,4 @@
-import { BrowserViewConstructorOptions } from 'electron';
+import { BrowserWindowConstructorOptions } from 'electron';
 import { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 
 declare module '@dimensional-innovations/vue-electron-background' {
@@ -8,7 +8,7 @@ declare module '@dimensional-innovations/vue-electron-background' {
     enableAutoUpdater?: boolean;
     enableKioskMode?: boolean;
     registerSchemesAsPrivileged?: boolean;
-    browserWindowOptionOverrides?: Partial<BrowserViewConstructorOptions>;
+    browserWindowOptionOverrides?: Partial<BrowserWindowConstructorOptions>;
     devTools?: Array<string | typeof VUEJS_DEVTOOLS>;
   }
 
