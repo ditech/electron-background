@@ -76,7 +76,7 @@ export async function init({
       [
         {
           scheme: 'app',
-          privileges: { secure: true, standard: true },
+          privileges: { secure: true, standard: true, supportFetchAPI: true },
         },
       ],
     );
