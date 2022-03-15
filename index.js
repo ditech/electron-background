@@ -96,7 +96,16 @@ export async function init({
 
   // open the dev server url if it's available (if the app is running in dev mode)
   if (WEBPACK_DEV_SERVER_URL && !!devTools) {
-    await installExtension(devTools);
+    // commenting this out for devtools temp fix
+    // await installExtension(devTools);
+    try {
+      await installExtension({
+        id: 'ljjemllljcmogpfapbkkighbhhppjdbg', //Vue Devtools beta
+        electron: '>=1.2.1'
+      })
+    } catch (e) {
+      console.error('Vue Devtools failed to install:', e.toString())
+    }
   }
   if (WEBPACK_DEV_SERVER_URL) {
     await browserWindow.loadURL(WEBPACK_DEV_SERVER_URL);
