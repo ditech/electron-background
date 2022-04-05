@@ -99,10 +99,7 @@ export async function init({
     // commenting this out for devtools temp fix
     // await installExtension(devTools);
     try {
-      await installExtension({
-        id: 'ljjemllljcmogpfapbkkighbhhppjdbg', // Vue Devtools beta
-        electron: '>=1.2.1',
-      });
+      await installExtension(devTools);
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString());
     }
