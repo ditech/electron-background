@@ -160,4 +160,6 @@ export async function init({
   });
   process.on('SIGTERM', app.quit);
   app.on('window-all-closed', app.quit);
+
+  return { browserWindow };
 }
