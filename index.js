@@ -110,7 +110,7 @@ export async function init({
   );
 
   // Create the schemas to serve static files from the media folder in public.
-  for (let i = 0; i < staticFileDirs.length; i + 1) {
+  for (let i = 0; i < staticFileDirs.length; i++) {
     const dir = staticFileDirs[i];
     createFileProtocol(dir, join(__static, dir));
   }
