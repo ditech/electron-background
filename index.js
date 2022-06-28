@@ -4,6 +4,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { autoUpdater } from 'electron-updater';
 import electronLog from 'electron-log';
+import { basename, dirname, join, normalize } from 'path';
 
 // https://github.com/webpack/webpack/issues/5392
 // eslint-disable-next-line prefer-destructuring
@@ -59,6 +60,16 @@ async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
   };
 }
 
+function createFileProtocol(scheme, sourceDirectory) {
+  protocol.registerFileProtocol(scheme, (request, respond) => {
+    const requestPath = request.url.replace(`${scheme}://`, '');
+    const requestDir = dirname(requestPath);
+    const requestFile = basename(requestPath);
+    const path = normalize(join(sourceDirectory, requestDir, requestFile));
+    respond({ path });
+  });
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export async function init({
   config = {},
@@ -68,18 +79,18 @@ export async function init({
   registerSchemesAsPrivileged = true,
   browserWindowOptionOverrides = {},
   devTools = [VUEJS_DEVTOOLS],
+  staticFileDirs = ['media']
 }) {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
   if (registerSchemesAsPrivileged) {
-    protocol.registerSchemesAsPrivileged(
-      [
-        {
-          scheme: 'app',
-          privileges: { secure: true, standard: true, supportFetchAPI: true },
-        },
-      ],
-    );
+    const customSchemes = ['app']
+      .concat(staticFileDirs)
+      .map(scheme => ({ 
+        scheme,  
+        privileges: { secure: true, standard: true, supportFetchAPI: true }
+      }));
+    protocol.registerSchemesAsPrivileged(customSchemes);
   }
 
   await app.whenReady();
@@ -93,6 +104,11 @@ export async function init({
   let browserWindow = new BrowserWindow(
     await getWindowOptions(browserWindowOptionOverrides, enableKioskMode),
   );
+
+  // Create the schemas to serve static files from the media folder in public.
+  for (const dir of staticFileDirs) {
+    createFileProtocol(dir, join(__static, dir));
+  }
 
   // open the dev server url if it's available (if the app is running in dev mode)
   if (WEBPACK_DEV_SERVER_URL && !!devTools) {
