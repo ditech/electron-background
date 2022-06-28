@@ -4,9 +4,11 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { autoUpdater } from 'electron-updater';
 import electronLog from 'electron-log';
-import { basename, dirname, join, normalize } from 'path';
+import {
+  basename, dirname, join, normalize,
+} from 'path';
 
-/* global __static */ 
+/* global __static */
 
 // https://github.com/webpack/webpack/issues/5392
 // eslint-disable-next-line prefer-destructuring
@@ -81,16 +83,16 @@ export async function init({
   registerSchemesAsPrivileged = true,
   browserWindowOptionOverrides = {},
   devTools = [VUEJS_DEVTOOLS],
-  staticFileDirs = ['media']
+  staticFileDirs = ['media'],
 }) {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
   if (registerSchemesAsPrivileged) {
     const customSchemes = ['app']
       .concat(staticFileDirs)
-      .map(scheme => ({ 
-        scheme,  
-        privileges: { secure: true, standard: true, supportFetchAPI: true }
+      .map((scheme) => ({
+        scheme,
+        privileges: { secure: true, standard: true, supportFetchAPI: true },
       }));
     protocol.registerSchemesAsPrivileged(customSchemes);
   }
