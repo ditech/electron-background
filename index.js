@@ -6,6 +6,8 @@ import { autoUpdater } from 'electron-updater';
 import electronLog from 'electron-log';
 import { basename, dirname, join, normalize } from 'path';
 
+/* global __static */ 
+
 // https://github.com/webpack/webpack/issues/5392
 // eslint-disable-next-line prefer-destructuring
 const WEBPACK_DEV_SERVER_URL = process.env.WEBPACK_DEV_SERVER_URL;
@@ -106,7 +108,8 @@ export async function init({
   );
 
   // Create the schemas to serve static files from the media folder in public.
-  for (const dir of staticFileDirs) {
+  for (let i = 0; i < staticFileDirs.length; i + 1) {
+    const dir = staticFileDirs[i];
     createFileProtocol(dir, join(__static, dir));
   }
 
