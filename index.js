@@ -1,6 +1,5 @@
 import settings from 'electron-settings';
 import { app, protocol, BrowserWindow } from 'electron';
-import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { autoUpdater } from 'electron-updater';
 import electronLog from 'electron-log';
@@ -129,7 +128,7 @@ export async function init({
     await browserWindow.loadURL(WEBPACK_DEV_SERVER_URL);
     browserWindow.webContents.openDevTools();
   } else {
-    createProtocol('app');
+    createFileProtocol('app', __dirname);
     browserWindow.loadURL('app://./index.html');
   }
 
