@@ -66,7 +66,7 @@ async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
 
 function createFileProtocol(scheme, sourceDirectory) {
   protocol.registerFileProtocol(scheme, (request, respond) => {
-    const requestPath = request.url.replace(`${scheme}://`, '');
+    const requestPath = decodeURI(request.url.replace(`${scheme}://`, ''));
     const requestDir = dirname(requestPath);
     const requestFile = basename(requestPath);
     const path = normalize(join(sourceDirectory, requestDir, requestFile));
