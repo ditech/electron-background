@@ -1,4 +1,4 @@
-import { BrowserWindowConstructorOptions } from 'electron';
+import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 
 declare module '@dimensional-innovations/vue-electron-background' {
@@ -12,5 +12,5 @@ declare module '@dimensional-innovations/vue-electron-background' {
     devTools?: Array<string | typeof VUEJS_DEVTOOLS>;
   }
 
-  export function init(options: InitOptions): void;
+  export function init(options: InitOptions): Promise<{ browserWindow: BrowserWindow }>;
 }
