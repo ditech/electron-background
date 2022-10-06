@@ -23,6 +23,13 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
+"@dimensional-innovations/vue-electron-settings@^0.0.2":
+  version "0.0.2"
+  resolved "https://gitlab.com/api/v4/projects/22287326/packages/npm/@dimensional-innovations/vue-electron-settings/-/@dimensional-innovations/vue-electron-settings-0.0.2.tgz#eb9213721e662a594f32247e39ffc05652152401"
+  integrity sha1-65ITch5mKllPMiR+Of/AVlIVJAE=
+  dependencies:
+    electron-settings "^4.0.2"
+
 "@electron/get@^1.0.1":
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.13.1.tgz#42a0aa62fd1189638bd966e23effaebb16108368"
@@ -554,7 +561,7 @@ electron-log@^4.3.0:
   resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-4.4.1.tgz#28ebeb474eccba2ebf194a96c40d6328e5353e4d"
   integrity sha512-nK/DwxPLtwWbggPCm27eMQhYHc3gzoZ+cokBK99diO4WsZJKrv5l44EUW8mRfWpmC8ZubnMyp6GTUIJyTc9AJA==
 
-electron-settings@^4.0.1:
+electron-settings@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/electron-settings/-/electron-settings-4.0.2.tgz#26ef242397393e0e69119f6fb879fc2287d0f508"
   integrity sha512-WnUlrnBsO784oXcag0ym+A3ySoIwonz5GhYFsWroMHVzslzmsP+81f/Fof41T9UrRUxuPPKiZPZMwGO+yvWChg==
