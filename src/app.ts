@@ -1,9 +1,19 @@
 import { app } from 'electron';
 
+/**
+ * Options used to initial the application instance.
+ */
 export interface InitAppOptions {
+  /**
+   * Indicates if touch events should be supported in the application. Defaults to true.
+   */
   enableTouchEvents?: boolean;
 }
 
+/**
+ * Configures common settings in the application instance. This should be called after
+ * app.whenReady() has resolved.
+ */
 export function initApp({
   enableTouchEvents = true
 }: InitAppOptions = {}): void {

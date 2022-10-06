@@ -88,7 +88,7 @@ export async function init({
   staticFileDirs = [
     { schema: 'app', dir: __dirname }
   ],
-}: InitOptions) {
+}: InitOptions): Promise<{ browserWindow: BrowserWindow }> {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
   if (privilegedSchemes) {
