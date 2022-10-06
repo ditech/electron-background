@@ -3,56 +3,101 @@ import { initSettings } from '@dimensional-innovations/vue-electron-settings';
 import { initVersion } from '@dimensional-innovations/vue-electron-version';
 import { app, BrowserWindow, BrowserWindowConstructorOptions, protocol } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
-import { join } from 'path';
 import { initApp } from './app';
 import { startAutoUpdater } from './autoUpdater';
 import { startHeartbeat } from './heartbeat';
 import { createFileProtocol } from './protocol';
 import { getWindowOptions } from './window';
 
-// eslint-disable-next-line no-underscore-dangle
-declare const __static: string;
-
-// https://github.com/webpack/webpack/issues/5392
-// eslint-disable-next-line prefer-destructuring
-const WEBPACK_DEV_SERVER_URL = process.env.WEBPACK_DEV_SERVER_URL;
-
+/**
+ * Options that define how to create and load the application.
+ */
 export interface InitOptions {
-  config?: any;
-  enableTouchEvents?: boolean;
-  enableAutoUpdater?: boolean;
-  enableHeartbeat?: boolean;
-  enableKioskMode?: boolean;
-  enableAssetLoader?: boolean;
-  registerSchemesAsPrivileged?: Array<string> | false;
-  browserWindowOptionOverrides?: Partial<BrowserWindowConstructorOptions>;
-  devTools?: Array<typeof VUEJS_DEVTOOLS>;
-  staticFileDirs?: Array<{ schema: string, dir: string }>;
+  /**
+   * The url to load once the the app has been created. By default this is "app://index.html" when the
+   * app is packaged and the WEBPACK_DEV_SERVER_URL environment variable otherwise.
+   */
   appUrl?: string;
+
+  /**
+   * Application config values. These are managed through the @dimensional-innovations/vue-electron-settings package.
+   */
+  config?: any;
+
+  /**
+   * Indicates if the application should support touch events. Defaults to true.
+   */
+  enableTouchEvents?: boolean;
+
+  /**
+   * Indicates if the application should automatically check for and install updates. Defaults to true when the app is packaged.
+   * 
+   * If this is enabled, "autoUpdaterChannel" must also be set in the app config.
+   */
+  enableAutoUpdater?: boolean;
+
+  /**
+   * Indicates if the application should start a "heartbeat" for monitoring. Defaults to true when the app is packaged.
+   * 
+   * If this is enabled, "heartbeatApiKey" must also be set in the app config.
+   */
+  enableHeartbeat?: boolean;
+
+  /**
+   * Indicates if the app should run kiosk mode. Defaults to true when the app is packaged.
+   */
+  enableKioskMode?: boolean;
+
+  /**
+   * Indicates if the @dimensional-innovation/electron-asset-loader package should be initialized. Defaults to true.
+   */
+  enableAssetLoader?: boolean;
+
+  /**
+   * The list of schemes that should be be considered privileged. Defaults to "['app']"
+   */
+  privilegedSchemes?: Array<string>;
+
+  /**
+   * Additional options used to customize the browser window.
+   */
+  browserWindowOptionOverrides?: Partial<BrowserWindowConstructorOptions>;
+
+  /**
+   * The dev tools to install in the browser window. Defaults to VUEJS_DEVTOOLS.
+   */
+  devTools?: Array<typeof VUEJS_DEVTOOLS>;
+
+  /**
+   * 
+   */
+  staticFileDirs?: Array<{ schema: string, dir: string }>;
 } 
 
 export async function init({
+  appUrl = process.env.WEBPACK_DEV_SERVER_URL ? process.env.WEBPACK_DEV_SERVER_URL : 'app://index.html',
+  browserWindowOptionOverrides = {},
   config = {},
-  enableTouchEvents = true,
+  devTools = [VUEJS_DEVTOOLS],
+  enableAssetLoader = true,
   enableAutoUpdater = app.isPackaged,
   enableHeartbeat = app.isPackaged,
   enableKioskMode = app.isPackaged,
-  enableAssetLoader = true,
-  registerSchemesAsPrivileged = ['app'],
-  browserWindowOptionOverrides = {},
-  devTools = [VUEJS_DEVTOOLS],
-  staticFileDirs = [],
-  appUrl = process.env.WEBPACK_DEV_SERVER_URL ? process.env.WEBPACK_DEV_SERVER_URL : 'app://index.html'
+  enableTouchEvents = true,
+  privilegedSchemes = ['app'],
+  staticFileDirs = [
+    { schema: 'app', dir: __dirname }
+  ],
 }: InitOptions) {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
-  if (registerSchemesAsPrivileged) {
-    const customSchemes = registerSchemesAsPrivileged
+  if (privilegedSchemes) {
+    const customSchemes = privilegedSchemes
       .map((scheme) => ({
         scheme,
         privileges: { secure: true, standard: true, supportFetchAPI: true },
       }));
-    protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true, supportFetchAPI: true } }]);
+    protocol.registerSchemesAsPrivileged(customSchemes);
   }
 
   await app.whenReady();
@@ -99,13 +144,9 @@ export async function init({
 
   browserWindow.loadURL(appUrl);
 
-  // setup the auto updater, allowing this app to be updated from pushes to an S3 bucket
-  // quit the app and update immediately update
-  // https://www.electron.build/auto-update
-  if (enableAutoUpdater) {
+  if (enableAutoUpdater && autoUpdaterChannel) {
     startAutoUpdater(autoUpdaterChannel);
   }
-  
   if (enableHeartbeat && heartbeatApiKey) {
     startHeartbeat(heartbeatApiKey);
   }
