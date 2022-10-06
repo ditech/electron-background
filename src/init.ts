@@ -1,3 +1,4 @@
+import { initAssetLoader } from '@dimensional-innovations/electron-asset-loader';
 import { initSettings } from '@dimensional-innovations/vue-electron-settings';
 import { initVersion } from '@dimensional-innovations/vue-electron-version';
 import { app, BrowserWindow, BrowserWindowConstructorOptions, protocol } from 'electron';
@@ -22,45 +23,51 @@ export interface InitOptions {
   enableAutoUpdater?: boolean;
   enableHeartbeat?: boolean;
   enableKioskMode?: boolean;
-  registerSchemesAsPrivileged?: boolean;
+  enableAssetLoader?: boolean;
+  registerSchemesAsPrivileged?: Array<string> | false;
   browserWindowOptionOverrides?: Partial<BrowserWindowConstructorOptions>;
   devTools?: Array<typeof VUEJS_DEVTOOLS>;
-  staticFileDirs?: Array<string>;
+  staticFileDirs?: Array<{ schema: string, dir: string }>;
+  appUrl?: string;
 } 
 
 export async function init({
   config = {},
   enableTouchEvents = true,
-  enableAutoUpdater = true,
-  enableHeartbeat = true,
-  enableKioskMode = false,
-  registerSchemesAsPrivileged = true,
+  enableAutoUpdater = app.isPackaged,
+  enableHeartbeat = app.isPackaged,
+  enableKioskMode = app.isPackaged,
+  enableAssetLoader = true,
+  registerSchemesAsPrivileged = ['app'],
   browserWindowOptionOverrides = {},
   devTools = [VUEJS_DEVTOOLS],
-  staticFileDirs = ['media'],
+  staticFileDirs = [],
+  appUrl = process.env.WEBPACK_DEV_SERVER_URL ? process.env.WEBPACK_DEV_SERVER_URL : 'app://index.html'
 }: InitOptions) {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
   if (registerSchemesAsPrivileged) {
-    const customSchemes = ['app']
-      .concat(staticFileDirs)
+    const customSchemes = registerSchemesAsPrivileged
       .map((scheme) => ({
         scheme,
         privileges: { secure: true, standard: true, supportFetchAPI: true },
       }));
-    protocol.registerSchemesAsPrivileged(customSchemes);
+    protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true, supportFetchAPI: true } }]);
   }
 
   await app.whenReady();
 
-  initApp();
+  initApp({ enableTouchEvents });
   initVersion();
   const { autoUpdaterChannel, heartbeatApiKey, appHeight, appWidth, backgroundColor } = await initSettings(config);
+
+  if (enableAssetLoader) {
+    initAssetLoader();
+  }
   
   // Create the schemas to serve static files from the media folder in public.
-  for (let i = 0; i < staticFileDirs.length; i++) {
-    const dir = staticFileDirs[i];
-    createFileProtocol(dir, join(__static, dir));
+  for (const { schema, dir } of staticFileDirs) {
+    createFileProtocol(schema, dir);
   }
 
   // create the browser window with the correct options
@@ -77,7 +84,7 @@ export async function init({
   });
 
   // open the dev server url if it's available (if the app is running in dev mode)
-  if (WEBPACK_DEV_SERVER_URL && !!devTools) {
+  if (!app.isPackaged && !!devTools) {
     // commenting this out for devtools temp fix
     // await installExtension(devTools);
     try {
@@ -86,13 +93,11 @@ export async function init({
       console.error('Vue Devtools failed to install:', e.toString());
     }
   }
-  if (WEBPACK_DEV_SERVER_URL) {
-    await browserWindow.loadURL(WEBPACK_DEV_SERVER_URL);
+  if (!app.isPackaged) {
     browserWindow.webContents.openDevTools();
-  } else {
-    createFileProtocol('app', __dirname);
-    browserWindow.loadURL('app://./index.html');
   }
+
+  browserWindow.loadURL(appUrl);
 
   // setup the auto updater, allowing this app to be updated from pushes to an S3 bucket
   // quit the app and update immediately update

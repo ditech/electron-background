@@ -23,6 +23,11 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
+"@dimensional-innovations/electron-asset-loader@^1.2.1":
+  version "1.2.1"
+  resolved "https://gitlab.com/api/v4/projects/38636805/packages/npm/@dimensional-innovations/electron-asset-loader/-/@dimensional-innovations/electron-asset-loader-1.2.1.tgz#36b9d80b868834d8798fac2ac5c08339e566d4d3"
+  integrity sha1-NrnYC4aINNh5j6wqxcCDOeVm1NM=
+
 "@dimensional-innovations/node-heartbeat@^0.0.4":
   version "0.0.4"
   resolved "https://gitlab.com/api/v4/projects/22260130/packages/npm/@dimensional-innovations/node-heartbeat/-/@dimensional-innovations/node-heartbeat-0.0.4.tgz#12de82e07f8699ce618e411467a6a47c16a883a2"
