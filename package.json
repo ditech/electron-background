@@ -28,6 +28,7 @@
   },
   "homepage": "https://gitlab.com/dimensional-innovations/vue-electron-background#readme",
   "dependencies": {
+    "@dimensional-innovations/node-heartbeat": "^0.0.4",
     "@dimensional-innovations/vue-electron-settings": "^0.0.2",
     "electron-devtools-installer": "^3.1.1",
     "electron-log": "^4.3.0",

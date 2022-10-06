@@ -3,6 +3,7 @@ import { app, BrowserWindow, BrowserWindowConstructorOptions, protocol } from 'e
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { join } from 'path';
 import { startAutoUpdater } from './autoUpdater';
+import { startHeartbeat } from './heartbeat';
 import { createFileProtocol } from './protocol';
 import { getWindowOptions } from './window';
 
@@ -17,6 +18,7 @@ export interface InitOptions {
   config?: any;
   enableTouchEvents?: boolean;
   enableAutoUpdater?: boolean;
+  enableHeartbeat?: boolean;
   enableKioskMode?: boolean;
   registerSchemesAsPrivileged?: boolean;
   browserWindowOptionOverrides?: Partial<BrowserWindowConstructorOptions>;
@@ -28,6 +30,7 @@ export async function init({
   config = {},
   enableTouchEvents = true,
   enableAutoUpdater = true,
+  enableHeartbeat = true,
   enableKioskMode = false,
   registerSchemesAsPrivileged = true,
   browserWindowOptionOverrides = {},
@@ -48,7 +51,7 @@ export async function init({
 
   await app.whenReady();
 
-  const { autoUpdaterChannel, appHeight, appWidth, backgroundColor } = await initSettings(config);
+  const { autoUpdaterChannel, heartbeatApiKey, appHeight, appWidth, backgroundColor } = await initSettings(config);
   
   // Create the schemas to serve static files from the media folder in public.
   for (let i = 0; i < staticFileDirs.length; i++) {
@@ -92,6 +95,10 @@ export async function init({
   // https://www.electron.build/auto-update
   if (enableAutoUpdater) {
     startAutoUpdater(autoUpdaterChannel);
+  }
+
+  if (enableHeartbeat && heartbeatApiKey) {
+    startHeartbeat(heartbeatApiKey);
   }
 
   // enable touch events
