@@ -2,6 +2,7 @@ import { initSettings } from '@dimensional-innovations/vue-electron-settings';
 import { app, BrowserWindow, BrowserWindowConstructorOptions, protocol } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { join } from 'path';
+import { initApp } from './app';
 import { startAutoUpdater } from './autoUpdater';
 import { startHeartbeat } from './heartbeat';
 import { createFileProtocol } from './protocol';
@@ -51,6 +52,7 @@ export async function init({
 
   await app.whenReady();
 
+  initApp();
   const { autoUpdaterChannel, heartbeatApiKey, appHeight, appWidth, backgroundColor } = await initSettings(config);
   
   // Create the schemas to serve static files from the media folder in public.
@@ -96,25 +98,10 @@ export async function init({
   if (enableAutoUpdater) {
     startAutoUpdater(autoUpdaterChannel);
   }
-
+  
   if (enableHeartbeat && heartbeatApiKey) {
     startHeartbeat(heartbeatApiKey);
   }
-
-  // enable touch events
-  // https://www.electronjs.org/docs/api/command-line-switches
-  if (enableTouchEvents) {
-    app.commandLine.appendSwitch('touch-events', 'enabled');
-  }
-
-  // guarantee unload and before unload methods get called before actually
-  // quitting by gracefully calling app.quit
-  // https://www.electronjs.org/docs/api/app#appquit
-  process.on('message', (data) => {
-    if (data === 'graceful-exit') app.quit();
-  });
-  process.on('SIGTERM', app.quit);
-  app.on('window-all-closed', app.quit);
 
   return { browserWindow };
 }
