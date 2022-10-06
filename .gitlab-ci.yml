@@ -1,7 +1,7 @@
 image: node:14.18.1
 
 stages:
-  - lint
+  - build
   - release
 
 cache:
@@ -11,13 +11,20 @@ cache:
 include:
   - project: 'dimensional-innovations/ci-cd'
     ref: master
-    file: '/javascript/release-package.yml'
+    file: '/javascript/auth-with-di-package-registry.yml'
   - project: 'dimensional-innovations/ci-cd'
     ref: master
-    file: '/javascript/auth-with-di-package-registry.yml'
+    file: '/javascript/release-package.yml'
 
-lint:
-  stage: lint
+build:
+  stage: build
   script:
-    - yarn install
+    - yarn build
+  artifacts:
+    paths:
+      - dist/**/*
+
+build_lint:
+  stage: build
+  script:
     - yarn lint
