@@ -1,4 +1,5 @@
 import { initSettings } from '@dimensional-innovations/vue-electron-settings';
+import { initVersion } from '@dimensional-innovations/vue-electron-version';
 import { app, BrowserWindow, BrowserWindowConstructorOptions, protocol } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { join } from 'path';
@@ -53,6 +54,7 @@ export async function init({
   await app.whenReady();
 
   initApp();
+  initVersion();
   const { autoUpdaterChannel, heartbeatApiKey, appHeight, appWidth, backgroundColor } = await initSettings(config);
   
   // Create the schemas to serve static files from the media folder in public.

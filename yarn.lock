@@ -37,6 +37,11 @@
   dependencies:
     electron-settings "^4.0.2"
 
+"@dimensional-innovations/vue-electron-version@^1.0.3":
+  version "1.0.3"
+  resolved "https://gitlab.com/api/v4/projects/22232883/packages/npm/@dimensional-innovations/vue-electron-version/-/@dimensional-innovations/vue-electron-version-1.0.3.tgz#81e3b2da91f8138c845dfaeb4bba2f3de8ef85ed"
+  integrity sha1-geOy2pH4E4yEXfrrS7ovPejvhe0=
+
 "@electron/get@^1.0.1":
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.13.1.tgz#42a0aa62fd1189638bd966e23effaebb16108368"

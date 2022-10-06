@@ -30,6 +30,7 @@
   "dependencies": {
     "@dimensional-innovations/node-heartbeat": "^0.0.4",
     "@dimensional-innovations/vue-electron-settings": "^0.0.2",
+    "@dimensional-innovations/vue-electron-version": "^1.0.3",
     "electron-devtools-installer": "^3.1.1",
     "electron-log": "^4.3.0",
     "electron-updater": "^4.3.5"
