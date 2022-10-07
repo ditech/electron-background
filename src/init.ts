@@ -4,9 +4,10 @@ import { initVersion } from '@dimensional-innovations/vue-electron-version';
 import {
   app, BrowserWindow, BrowserWindowConstructorOptions, protocol,
 } from 'electron';
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
+import { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { initApp } from './app';
 import { startAutoUpdater } from './autoUpdater';
+import { installDevTools } from './dev';
 import { startHeartbeat } from './heartbeat';
 import { createFileProtocol } from './protocol';
 import { getWindowOptions } from './window';
@@ -18,8 +19,10 @@ export interface InitOptions {
   /**
    * The url to load once the the app has been created. By default this is "app://index.html" when the
    * app is packaged and the WEBPACK_DEV_SERVER_URL environment variable otherwise.
+   *
+   * You can also pass an object in for the app url in order to define a custom scheme to serve the app from.
    */
-  appUrl?: string;
+  appUrl?: { scheme: string, directory: string, indexUrl: string } | string;
 
   /**
    * Application config values. These are managed through the @dimensional-innovations/vue-electron-settings package.
@@ -71,13 +74,18 @@ export interface InitOptions {
   devTools?: Array<typeof VUEJS_DEVTOOLS>;
 
   /**
-   *
+   * Directories where static files are served from. Generally these directories exist in the "public" folder.
    */
   staticFileDirs?: Array<{ schema: string, dir: string }>;
 }
 
+/**
+ * Initializes the application using the provided settings.
+ */
 export async function init({
-  appUrl = process.env.WEBPACK_DEV_SERVER_URL ? process.env.WEBPACK_DEV_SERVER_URL : 'app://index.html',
+  appUrl = process.env.WEBPACK_DEV_SERVER_URL
+    ? process.env.WEBPACK_DEV_SERVER_URL
+    : { scheme: 'app', directory: __dirname, indexUrl: 'app://index.html' },
   browserWindowOptionOverrides = {},
   config = {},
   devTools = [VUEJS_DEVTOOLS],
@@ -87,9 +95,7 @@ export async function init({
   enableKioskMode = app.isPackaged,
   enableTouchEvents = true,
   privilegedSchemes = ['app'],
-  staticFileDirs = [
-    { schema: 'app', dir: __dirname },
-  ],
+  staticFileDirs = [],
 }: InitOptions): Promise<{ browserWindow: BrowserWindow }> {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
@@ -132,21 +138,15 @@ export async function init({
     browserWindow = null;
   });
 
-  // open the dev server url if it's available (if the app is running in dev mode)
-  if (!app.isPackaged && !!devTools) {
-    // commenting this out for devtools temp fix
-    // await installExtension(devTools);
-    try {
-      await installExtension(devTools);
-    } catch (e: any) {
-      console.error('Vue Devtools failed to install:', e.toString());
-    }
-  }
   if (!app.isPackaged) {
-    browserWindow.webContents.openDevTools();
+    await installDevTools(browserWindow, devTools);
   }
-
-  browserWindow.loadURL(appUrl);
+  if (typeof appUrl === 'string') {
+    browserWindow.loadURL(appUrl);
+  } else {
+    createFileProtocol(appUrl.scheme, appUrl.directory);
+    browserWindow.loadURL(appUrl.indexUrl);
+  }
 
   if (enableAutoUpdater && autoUpdaterChannel) {
     startAutoUpdater(autoUpdaterChannel);
