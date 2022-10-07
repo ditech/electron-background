@@ -2,10 +2,9 @@ import { initAssetLoader } from '@dimensional-innovations/electron-asset-loader'
 import { initSettings } from '@dimensional-innovations/vue-electron-settings';
 import { initVersion } from '@dimensional-innovations/vue-electron-version';
 import {
-  app, BrowserWindow, BrowserWindowConstructorOptions, protocol
+  app, BrowserWindow, BrowserWindowConstructorOptions, protocol,
 } from 'electron';
 import { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
-import { join } from 'path';
 import { initApp } from './app';
 import { startAutoUpdater } from './autoUpdater';
 import { installDevTools } from './dev';
@@ -18,7 +17,7 @@ import { getWindowOptions } from './window';
  */
 export interface InitOptions {
   /**
-   * The url to load once the the app has been created. You can also pass an object in for the app url in order to define a 
+   * The url to load once the the app has been created. You can also pass an object in for the app url in order to define a
    * custom scheme to serve the app from.
    */
   appUrl: { scheme: string, directory: string, indexUrl: string } | string;
@@ -94,7 +93,7 @@ export async function init({
   privilegedSchemes = [],
   staticFileDirs = [],
 }: InitOptions): Promise<{ browserWindow: BrowserWindow }> {
-  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+  process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
