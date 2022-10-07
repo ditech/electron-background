@@ -1,11 +1,10 @@
-
 /** Utility methods for creating application windows. */
 
 import { BrowserWindowConstructorOptions } from 'electron';
 
 /**
  * Combines the provided window options with defaults for the a BrowserWindow.
- * 
+ *
  * @param options - The options to include with the default options.
  * @param enableKioskMode - If true, additional defaults will be included to support kiosk mode.
  * @returns - The options that can be passed to the BrowserWindow constructor.
@@ -37,11 +36,11 @@ export function getWindowOptions(options: Partial<BrowserWindowConstructorOption
       y: 0,
       ...options,
       closable: true, // !!! enabling will break auto updating !!!
-    }
+    };
   }
 
   return {
     ...defaultWindowOptions,
-    ...options
-  }
+    ...options,
+  };
 }

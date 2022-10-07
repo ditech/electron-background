@@ -15,7 +15,7 @@ export interface InitAppOptions {
  * app.whenReady() has resolved.
  */
 export function initApp({
-  enableTouchEvents = true
+  enableTouchEvents = true,
 }: InitAppOptions = {}): void {
   // enable touch events
   // https://www.electronjs.org/docs/api/command-line-switches

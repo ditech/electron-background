@@ -1,7 +1,9 @@
 import { initAssetLoader } from '@dimensional-innovations/electron-asset-loader';
 import { initSettings } from '@dimensional-innovations/vue-electron-settings';
 import { initVersion } from '@dimensional-innovations/vue-electron-version';
-import { app, BrowserWindow, BrowserWindowConstructorOptions, protocol } from 'electron';
+import {
+  app, BrowserWindow, BrowserWindowConstructorOptions, protocol,
+} from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { initApp } from './app';
 import { startAutoUpdater } from './autoUpdater';
@@ -31,14 +33,14 @@ export interface InitOptions {
 
   /**
    * Indicates if the application should automatically check for and install updates. Defaults to true when the app is packaged.
-   * 
+   *
    * If this is enabled, "autoUpdaterChannel" must also be set in the app config.
    */
   enableAutoUpdater?: boolean;
 
   /**
    * Indicates if the application should start a "heartbeat" for monitoring. Defaults to true when the app is packaged.
-   * 
+   *
    * If this is enabled, "heartbeatApiKey" must also be set in the app config.
    */
   enableHeartbeat?: boolean;
@@ -69,10 +71,10 @@ export interface InitOptions {
   devTools?: Array<typeof VUEJS_DEVTOOLS>;
 
   /**
-   * 
+   *
    */
   staticFileDirs?: Array<{ schema: string, dir: string }>;
-} 
+}
 
 export async function init({
   appUrl = process.env.WEBPACK_DEV_SERVER_URL ? process.env.WEBPACK_DEV_SERVER_URL : 'app://index.html',
@@ -86,7 +88,7 @@ export async function init({
   enableTouchEvents = true,
   privilegedSchemes = ['app'],
   staticFileDirs = [
-    { schema: 'app', dir: __dirname }
+    { schema: 'app', dir: __dirname },
   ],
 }: InitOptions): Promise<{ browserWindow: BrowserWindow }> {
   // bypasses content security policy for resources
@@ -104,12 +106,14 @@ export async function init({
 
   initApp({ enableTouchEvents });
   initVersion();
-  const { autoUpdaterChannel, heartbeatApiKey, appHeight, appWidth, backgroundColor } = await initSettings(config);
+  const {
+    autoUpdaterChannel, heartbeatApiKey, appHeight, appWidth, backgroundColor,
+  } = await initSettings(config);
 
   if (enableAssetLoader) {
     initAssetLoader();
   }
-  
+
   // Create the schemas to serve static files from the media folder in public.
   for (const { schema, dir } of staticFileDirs) {
     createFileProtocol(schema, dir);
@@ -119,8 +123,8 @@ export async function init({
   let browserWindow: BrowserWindow | null = new BrowserWindow(getWindowOptions({
     height: appHeight,
     width: appWidth,
-    backgroundColor: backgroundColor,
-    ...browserWindowOptionOverrides
+    backgroundColor,
+    ...browserWindowOptionOverrides,
   }, enableKioskMode));
   // unassign window to drop event listeners, remove the reference
   // https://www.electronjs.org/docs/api/browser-window#event-closed
