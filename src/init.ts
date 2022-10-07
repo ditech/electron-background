@@ -18,12 +18,10 @@ import { getWindowOptions } from './window';
  */
 export interface InitOptions {
   /**
-   * The url to load once the the app has been created. By default this is "app://index.html" when the
-   * app is packaged and the WEBPACK_DEV_SERVER_URL environment variable otherwise.
-   *
-   * You can also pass an object in for the app url in order to define a custom scheme to serve the app from.
+   * The url to load once the the app has been created. You can also pass an object in for the app url in order to define a 
+   * custom scheme to serve the app from.
    */
-  appUrl?: { scheme: string, directory: string, indexUrl: string } | string;
+  appUrl: { scheme: string, directory: string, indexUrl: string } | string;
 
   /**
    * Application config values. These are managed through the @dimensional-innovations/vue-electron-settings package.
@@ -70,7 +68,7 @@ export interface InitOptions {
   browserWindowOptionOverrides?: Partial<BrowserWindowConstructorOptions>;
 
   /**
-   * The dev tools to install in the browser window. Defaults to VUEJS_DEVTOOLS.
+   * The dev tools to install in the browser window. Defaults to VUEJS3_DEVTOOLS.
    */
   devTools?: Array<typeof VUEJS3_DEVTOOLS>;
 
@@ -84,9 +82,7 @@ export interface InitOptions {
  * Initializes the application using the provided settings.
  */
 export async function init({
-  appUrl = (process.env['VITE_DEV_SERVER_HOST'] && process.env['VITE_DEV_SERVER_PORT'])
-    ? `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`
-    : 'file://index.html',
+  appUrl,
   browserWindowOptionOverrides = {},
   config = {},
   devTools = [VUEJS3_DEVTOOLS],
@@ -96,9 +92,7 @@ export async function init({
   enableKioskMode = app.isPackaged,
   enableTouchEvents = true,
   privilegedSchemes = [],
-  staticFileDirs = [
-    { schema: 'media', dir: app.isPackaged ? join(__dirname, 'media') : join(__dirname, '../public/media') }
-  ],
+  staticFileDirs = [],
 }: InitOptions): Promise<{ browserWindow: BrowserWindow }> {
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
