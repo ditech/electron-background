@@ -2,9 +2,10 @@ import { initAssetLoader } from '@dimensional-innovations/electron-asset-loader'
 import { initSettings } from '@dimensional-innovations/vue-electron-settings';
 import { initVersion } from '@dimensional-innovations/vue-electron-version';
 import {
-  app, BrowserWindow, BrowserWindowConstructorOptions, protocol,
+  app, BrowserWindow, BrowserWindowConstructorOptions, protocol
 } from 'electron';
-import { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
+import { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
+import { join } from 'path';
 import { initApp } from './app';
 import { startAutoUpdater } from './autoUpdater';
 import { installDevTools } from './dev';
@@ -83,19 +84,21 @@ export interface InitOptions {
  * Initializes the application using the provided settings.
  */
 export async function init({
-  appUrl = process.env.WEBPACK_DEV_SERVER_URL
-    ? process.env.WEBPACK_DEV_SERVER_URL
-    : { scheme: 'app', directory: __dirname, indexUrl: 'app://index.html' },
+  appUrl = (process.env['VITE_DEV_SERVER_HOST'] && process.env['VITE_DEV_SERVER_PORT'])
+    ? `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`
+    : 'file://index.html',
   browserWindowOptionOverrides = {},
   config = {},
-  devTools = [VUEJS_DEVTOOLS],
+  devTools = [VUEJS3_DEVTOOLS],
   enableAssetLoader = true,
   enableAutoUpdater = app.isPackaged,
   enableHeartbeat = app.isPackaged,
   enableKioskMode = app.isPackaged,
   enableTouchEvents = true,
-  privilegedSchemes = ['app'],
-  staticFileDirs = [],
+  privilegedSchemes = [],
+  staticFileDirs = [
+    { schema: 'media', dir: app.isPackaged ? join(__dirname, 'media') : join(__dirname, '../public/media') }
+  ],
 }: InitOptions): Promise<{ browserWindow: BrowserWindow }> {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
