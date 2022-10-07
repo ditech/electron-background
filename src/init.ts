@@ -72,7 +72,7 @@ export interface InitOptions {
   /**
    * The dev tools to install in the browser window. Defaults to VUEJS_DEVTOOLS.
    */
-  devTools?: Array<typeof VUEJS_DEVTOOLS>;
+  devTools?: Array<typeof VUEJS3_DEVTOOLS>;
 
   /**
    * Directories where static files are served from. Generally these directories exist in the "public" folder.
@@ -100,6 +100,8 @@ export async function init({
     { schema: 'media', dir: app.isPackaged ? join(__dirname, 'media') : join(__dirname, '../public/media') }
   ],
 }: InitOptions): Promise<{ browserWindow: BrowserWindow }> {
+  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
   if (privilegedSchemes) {
