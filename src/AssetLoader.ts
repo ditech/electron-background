@@ -17,7 +17,7 @@ export class AssetLoader implements InitPlugin {
       const { initAssetLoader } = await import('@dimensional-innovations/electron-asset-loader');
       initAssetLoader(this.options);
     } catch (error) {
-      context.log.error('Failed to initial asset loader.');
+      context.log.error('Failed to initialize asset loader.');
       context.log.error(error);
     }
   }
