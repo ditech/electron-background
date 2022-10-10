@@ -1,11 +1,12 @@
 import { InitContext, InitPlugin } from './init';
 
 /**
- * Manages application settings with `@dimensional-innovations/vue-electron-settings`.
+ * Initializes the `@dimensional-innovations/vue-electron-settings` package, and updates the
+ * settings on the InitContext to match.
  *
- * Note that if this plugin is installed, the package must be installed in the application as well.
+ * Note that if this plugin is included, the package must be installed in the application as well.
  */
-export class ElectronSettings implements InitPlugin {
+export class VueElectronSettings implements InitPlugin {
   public async afterReady(context: InitContext): Promise<void> {
     try {
       const { initSettings } = await import('@dimensional-innovations/vue-electron-settings');

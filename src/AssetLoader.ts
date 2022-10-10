@@ -3,6 +3,8 @@ import { InitContext, InitPlugin } from './init';
 
 /**
  * Initializes the `@dimensional-innovations/electron-asset-loader` package.
+ * 
+ * Note that if this plugin is included, the package must be installed in the application as well.
  */
 export class AssetLoader implements InitPlugin {
   /**

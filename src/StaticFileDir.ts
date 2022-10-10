@@ -1,13 +1,20 @@
 import { protocol } from 'electron';
-import {
-  dirname, basename, normalize, join,
-} from 'path';
-import { InitContext, InitPlugin } from './init';
+import { basename, dirname, join, normalize } from 'path';
+import { InitPlugin } from './init';
 
+/**
+ * Registers a custom scheme to serve static files. 
+ */
 export class StaticFileDir implements InitPlugin {
+  /**
+   * @constructor
+   * 
+   * @param scheme - The scheme to serve the files from.
+   * @param dir - The directory where the static files are located.
+   */
   constructor(private readonly scheme: string, private readonly dir: string) { }
 
-  public async afterReady(context: InitContext): Promise<void> {
+  public async afterReady(): Promise<void> {
     createFileProtocol(this.scheme, this.dir);
   }
 }

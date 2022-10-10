@@ -8,8 +8,14 @@ export type Extension = string | typeof VUEJS3_DEVTOOLS;
  * Installs dev tools extensions and opens the devTools panel.
  */
 export class DevTools implements InitPlugin {
+  /**
+   * @constructor
+   * 
+   * @param devTools - The extensions to install. Defaults to Vue3 dev tools.
+   * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin when the app is packaged. Defaults to `!app.isPackaged`.
+   */
   constructor(
-    private readonly devTools: Array<Extension> = [VUEJS3_DEVTOOLS],
+    private readonly devTools: Array<Extension> = [VUEJS3_DEVTOOLS], 
     private readonly enabled: boolean = !app.isPackaged,
   ) { }
 

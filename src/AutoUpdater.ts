@@ -11,7 +11,8 @@ import { InitContext, InitPlugin } from './init';
  */
 export class AutoUpdater implements InitPlugin {
   /**
-   *
+   * @constructor
+   * 
    * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`.
    */
   constructor(private readonly enabled: boolean = app.isPackaged) { }

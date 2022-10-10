@@ -19,17 +19,23 @@ export class KioskBrowserWindow implements InitPlugin {
   public async afterReady(context: InitContext): Promise<void> {
     const { appHeight, appWidth, backgroundColor } = context.settings;
     context.browserWindowOptions = getWindowOptions({
-      height: appHeight && typeof appHeight === 'number' ? appHeight : 1920,
-      width: appWidth && typeof appWidth === 'number' ? appWidth : 1080,
-      backgroundColor: backgroundColor && typeof backgroundColor === 'string' ? backgroundColor : '#000',
       ...context.browserWindowOptions,
+      height: appHeight && typeof appHeight === 'number' 
+        ? appHeight 
+        : context.browserWindowOptions.height,
+      width: appWidth && typeof appWidth === 'number' 
+        ? appWidth 
+        : context.browserWindowOptions.width,
+      backgroundColor: backgroundColor && typeof backgroundColor === 'string' 
+        ? backgroundColor 
+        : context.browserWindowOptions.backgroundColor,
       ...this.options,
     }, this.enableKioskMode);
   }
 }
 
 /**
- * Combines the provided window options with defaults for the a BrowserWindow.
+ * Combines the provided window options with defaults for a BrowserWindow.
  *
  * @param options - The options to include with the default options.
  * @param enableKioskMode - If true, additional defaults will be included to support kiosk mode.
