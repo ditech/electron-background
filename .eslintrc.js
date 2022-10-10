@@ -4,12 +4,16 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'airbnb-base',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: "./tsconfig.json"
   },
+  plugins: [
+    '@typescript-eslint'
+  ],
   settings: {
     "import/resolver": {
       "node": {
@@ -18,20 +22,6 @@ module.exports = {
     }
   },
   rules: {
-    'no-console': 0,
-    'no-plusplus': 0,
-    'max-len': 0,
-    'no-restricted-syntax': 0,
-    'import/prefer-default-export': 0,
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
-    ]
+
   },
 };

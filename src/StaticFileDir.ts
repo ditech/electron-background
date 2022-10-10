@@ -1,9 +1,16 @@
 import { protocol } from 'electron';
 import {
-  basename, dirname, join, normalize,
+  dirname, basename, normalize, join,
 } from 'path';
+import { InitPlugin } from './init';
 
-/** Utility methods for creating custom protocols */
+export class StaticFileDir implements InitPlugin {
+  constructor(private readonly scheme: string, private readonly dir: string) { }
+
+  public async beforeLoad(): Promise<void> {
+    createFileProtocol(this.scheme, this.dir);
+  }
+}
 
 /**
  * Wrapper around `protocol.registerFileProtocol` that serves files from the given source directory.
