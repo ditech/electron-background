@@ -1,11 +1,8 @@
-import { AssetLoaderOptions, initAssetLoader } from '@dimensional-innovations/electron-asset-loader';
-import { initSettings } from '@dimensional-innovations/vue-electron-settings';
-import { initVersion } from '@dimensional-innovations/vue-electron-version';
+import { AssetLoaderOptions } from '@dimensional-innovations/electron-asset-loader';
 import {
   app, BrowserWindow, BrowserWindowConstructorOptions, protocol,
 } from 'electron';
 import { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
-import { initApp } from './app';
 import { startAutoUpdater } from './autoUpdater';
 import { Extension, installDevTools } from './dev';
 import { startHeartbeat } from './heartbeat';
@@ -108,7 +105,14 @@ export class Version implements InitPlugin {
   constructor(private readonly version?: string) { }
 
   public async beforeLoad(context: InitContext): Promise<void> {
-    initVersion(this.version);
+    try {
+      const { initVersion } = await import('@dimensional-innovations/vue-electron-version');
+      initVersion(this.version);
+    }
+    catch (error) {
+      context.log.error('Failed to initialize vue-electron-version');
+      context.log.error(error);
+    }
   }
 }
 
@@ -116,7 +120,14 @@ export class Settings implements InitPlugin {
   constructor(private readonly config?: Record<string, string | number | boolean>) { }
 
   public async beforeLoad(context: InitContext): Promise<void> {
-    context.settings = await initSettings(this.config || {})
+    try {
+      const { initSettings } = await import('@dimensional-innovations/vue-electron-settings');
+      context.settings = await initSettings(this.config || {});
+    }
+    catch (error) {
+      context.log.error('Failed tp initialize vue-electron-settings');
+      context.log.error(error);
+    }
   }
 }
 
@@ -182,7 +193,14 @@ export class AssetLoader implements InitPlugin {
   constructor(private readonly options?: AssetLoaderOptions) { }
 
   public async beforeLoad(context: InitContext): Promise<void> {
-    initAssetLoader(this.options);
+    try {
+      const { initAssetLoader } = await import('@dimensional-innovations/electron-asset-loader');
+      initAssetLoader(this.options);  
+    }
+    catch (error) {
+      context.log.error('Failed to initial asset loader.');
+      context.log.error(error);
+    }
   }
 }
 
