@@ -1,4 +1,4 @@
-import { initAssetLoader } from '@dimensional-innovations/electron-asset-loader';
+import { AssetLoaderOptions, initAssetLoader } from '@dimensional-innovations/electron-asset-loader';
 import { initSettings } from '@dimensional-innovations/vue-electron-settings';
 import { initVersion } from '@dimensional-innovations/vue-electron-version';
 import {
@@ -7,151 +7,199 @@ import {
 import { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 import { initApp } from './app';
 import { startAutoUpdater } from './autoUpdater';
-import { installDevTools } from './dev';
+import { Extension, installDevTools } from './dev';
 import { startHeartbeat } from './heartbeat';
 import { createFileProtocol } from './protocol';
 import { getWindowOptions } from './window';
+import log from 'electron-log';
 
-/**
- * Options that define how to create and load the application.
- */
+export class InitContext {
+  constructor(
+    public appUrl: string, 
+    public settings: Record<string, string | number | boolean>, 
+    public browserWindowOptions: BrowserWindowConstructorOptions, 
+    public browserWindow: BrowserWindow | null,
+    public log: Pick<Console, 'error' | 'warn' | 'info' | 'debug'>
+  ) { }
+}
+
+export interface InitPlugin {
+  beforeReady?(context: InitContext): Promise<void>;
+  beforeLoad?(context: InitContext): Promise<void>;
+  afterLoad?(context: InitContext): Promise<void>;
+}
+
 export interface InitOptions {
   /**
    * The url to load once the the app has been created. You can also pass an object in for the app url in order to define a
    * custom scheme to serve the app from.
    */
-  appUrl: { scheme: string, directory: string, indexUrl: string } | string;
+  appUrl: string;
 
-  /**
-   * Application config values. These are managed through the @dimensional-innovations/vue-electron-settings package.
-   */
-  config?: any;
-
-  /**
-   * Indicates if the application should support touch events. Defaults to true.
-   */
-  enableTouchEvents?: boolean;
-
-  /**
-   * Indicates if the application should automatically check for and install updates. Defaults to true when the app is packaged.
-   *
-   * If this is enabled, "autoUpdaterChannel" must also be set in the app config.
-   */
-  enableAutoUpdater?: boolean;
-
-  /**
-   * Indicates if the application should start a "heartbeat" for monitoring. Defaults to true when the app is packaged.
-   *
-   * If this is enabled, "heartbeatApiKey" must also be set in the app config.
-   */
-  enableHeartbeat?: boolean;
-
-  /**
-   * Indicates if the app should run kiosk mode. Defaults to true when the app is packaged.
-   */
-  enableKioskMode?: boolean;
-
-  /**
-   * Indicates if the @dimensional-innovation/electron-asset-loader package should be initialized. Defaults to true.
-   */
-  enableAssetLoader?: boolean;
-
-  /**
-   * The list of schemes that should be be considered privileged. Defaults to "['app']"
-   */
-  privilegedSchemes?: Array<string>;
-
-  /**
-   * Additional options used to customize the browser window.
-   */
-  browserWindowOptionOverrides?: Partial<BrowserWindowConstructorOptions>;
-
-  /**
-   * The dev tools to install in the browser window. Defaults to VUEJS3_DEVTOOLS.
-   */
-  devTools?: Array<typeof VUEJS3_DEVTOOLS>;
-
-  /**
-   * Directories where static files are served from. Generally these directories exist in the "public" folder.
-   */
-  staticFileDirs?: Array<{ schema: string, dir: string }>;
+  plugins?: Array<InitPlugin>;
 }
 
-/**
- * Initializes the application using the provided settings.
- */
+export interface InitResult {
+  browserWindow: BrowserWindow;
+}
+
 export async function init({
   appUrl,
-  browserWindowOptionOverrides = {},
-  config = {},
-  devTools = [VUEJS3_DEVTOOLS],
-  enableAssetLoader = true,
-  enableAutoUpdater = app.isPackaged,
-  enableHeartbeat = app.isPackaged,
-  enableKioskMode = app.isPackaged,
-  enableTouchEvents = true,
-  privilegedSchemes = [],
-  staticFileDirs = [],
-}: InitOptions): Promise<{ browserWindow: BrowserWindow }> {
+  plugins = []
+}: InitOptions): Promise<InitContext> {
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
-  // bypasses content security policy for resources
-  // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
-  if (privilegedSchemes) {
-    const customSchemes = privilegedSchemes
+  const context = new InitContext(appUrl, {}, {}, null, log);
+  for (const plugin of plugins) {
+    if (plugin.beforeReady) {
+      await plugin.beforeReady(context);
+    }
+  }
+
+  await app.whenReady();
+
+  for (const plugin of plugins) {
+    if (plugin.beforeLoad) {
+      await plugin.beforeLoad(context);
+    }
+  }
+
+  context.browserWindow = new BrowserWindow(context.browserWindowOptions);
+  context.browserWindow.on('closed', () => context.browserWindow = null);
+  await context.browserWindow.loadURL(context.appUrl);
+
+  for (const plugin of plugins) {
+    if (plugin.afterLoad) {
+      plugin.afterLoad(context);
+    }
+  }
+
+  app.on('window-all-closed', app.quit);
+  process.on('message', (data) => {
+    if (data === 'graceful-exit') app.quit();
+  });
+  process.on('SIGTERM', app.quit);
+
+  return context;
+}
+
+export class PrivilegedSchemes implements InitPlugin {
+  constructor(private readonly schemes: Array<string>) { }
+
+  public async beforeReady(context: InitContext): Promise<void> {
+    const customSchemes = this.schemes
       .map((scheme) => ({
         scheme,
         privileges: { secure: true, standard: true, supportFetchAPI: true },
       }));
     protocol.registerSchemesAsPrivileged(customSchemes);
   }
-
-  await app.whenReady();
-
-  initApp({ enableTouchEvents });
-  initVersion();
-  const {
-    autoUpdaterChannel, heartbeatApiKey, appHeight, appWidth, backgroundColor,
-  } = await initSettings(config);
-
-  if (enableAssetLoader) {
-    initAssetLoader();
-  }
-
-  // Create the schemas to serve static files from the media folder in public.
-  for (const { schema, dir } of staticFileDirs) {
-    createFileProtocol(schema, dir);
-  }
-
-  // create the browser window with the correct options
-  let browserWindow: BrowserWindow | null = new BrowserWindow(getWindowOptions({
-    height: appHeight,
-    width: appWidth,
-    backgroundColor,
-    ...browserWindowOptionOverrides,
-  }, enableKioskMode));
-  // unassign window to drop event listeners, remove the reference
-  // https://www.electronjs.org/docs/api/browser-window#event-closed
-  browserWindow.on('closed', () => {
-    browserWindow = null;
-  });
-
-  if (!app.isPackaged) {
-    await installDevTools(browserWindow, devTools);
-  }
-  if (typeof appUrl === 'string') {
-    browserWindow.loadURL(appUrl);
-  } else {
-    createFileProtocol(appUrl.scheme, appUrl.directory);
-    browserWindow.loadURL(appUrl.indexUrl);
-  }
-
-  if (enableAutoUpdater && autoUpdaterChannel) {
-    startAutoUpdater(autoUpdaterChannel);
-  }
-  if (enableHeartbeat && heartbeatApiKey) {
-    startHeartbeat(heartbeatApiKey);
-  }
-
-  return { browserWindow };
 }
+
+export class TouchEvents implements InitPlugin {
+  public async beforeLoad(context: InitContext): Promise<void> {
+    // enable touch events
+    // https://www.electronjs.org/docs/api/command-line-switches
+    app.commandLine.appendSwitch('touch-events', 'enabled');
+  }
+}
+
+export class Version implements InitPlugin {
+  constructor(private readonly version?: string) { }
+
+  public async beforeLoad(context: InitContext): Promise<void> {
+    initVersion(this.version);
+  }
+}
+
+export class Settings implements InitPlugin {
+  constructor(private readonly config?: Record<string, string | number | boolean>) { }
+
+  public async beforeLoad(context: InitContext): Promise<void> {
+    context.settings = await initSettings(this.config || {})
+  }
+}
+
+export class KioskBrowserWindow implements InitPlugin {
+  constructor(
+    private readonly enableKioskMode: boolean, 
+    private readonly options?: BrowserWindowConstructorOptions
+  ) { }
+
+  public async beforeLoad(context: InitContext): Promise<void> {
+    context.browserWindowOptions = getWindowOptions(this.options || {}, this.enableKioskMode);
+  }
+}
+
+export class DevTools implements InitPlugin {
+  constructor(private readonly devTools: Array<Extension> = [VUEJS3_DEVTOOLS]) { }
+
+  public async afterLoad(context: InitContext): Promise<void> {
+    if (!context.browserWindow) {
+      throw new Error('Expected value for browserWindow');
+    }
+    await installDevTools(context.browserWindow, this.devTools);
+  }
+}
+
+export class AutoUpdater implements InitPlugin {
+  constructor(private readonly enabled: boolean = true) { }
+
+  public async afterLoad(context: InitContext): Promise<void> {
+    const { autoUpdaterChannel } = context.settings;
+    if (this.enabled && autoUpdaterChannel) {
+      startAutoUpdater(autoUpdaterChannel as string);
+    }
+    else if (this.enabled) {
+      context.log.warn('autoUpdaterChannel was not set in the settings. AutoUpdater was not started.');
+    }
+  }
+}
+
+export class Heartbeat implements InitPlugin {
+  constructor(private readonly enabled: boolean = true) { }
+
+  public async afterLoad(context: InitContext): Promise<void> {
+    const { heartbeatApiKey } = context.settings;
+    if (this.enabled && heartbeatApiKey) {
+      startHeartbeat(heartbeatApiKey as string); 
+    }
+    else if (this.enabled) {
+      context.log.warn('heartbeatApiKey was set in the settings. Heartbeat was not started.');
+    }
+  }
+}
+
+export class StaticFileDir implements InitPlugin {
+  constructor(private readonly scheme: string, private readonly dir: string) { }
+
+  public async beforeLoad(context: InitContext): Promise<void> {
+    createFileProtocol(this.scheme, this.dir);
+  }
+}
+
+export class AssetLoader implements InitPlugin {
+  constructor(private readonly options?: AssetLoaderOptions) { }
+
+  public async beforeLoad(context: InitContext): Promise<void> {
+    initAssetLoader(this.options);
+  }
+}
+
+/**
+ * init({
+ *  appUrl: process.env.WEBPACK_DEV_URL ? process.env.WEBPACK_DEV_URL : 'app://index.html',
+ *  plugins: [
+ *    new Settings(config),
+ *    new TouchEvents(), 
+ *    new AutoUpdater(),
+ *    new Heartbeat(),
+ *    new KioskBrowserWindow(),
+ *    new AssetLoader(),
+ *    new PrivilegedSchemes(['app']),
+ *    new DevTools(),
+ *    new StaticFileDir('app', __dirname),
+ *    new StaticFileDir('media', join(__static, 'media'))
+ *  ]
+ * });
+ */
