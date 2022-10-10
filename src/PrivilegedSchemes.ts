@@ -1,5 +1,5 @@
 import { protocol } from 'electron';
-import { InitPlugin } from './init';
+import { InitContext, InitPlugin } from './init';
 
 /**
  * Registers schemes as privileged.
@@ -15,7 +15,7 @@ export class PrivilegedSchemes implements InitPlugin {
   /**
    * @inheritdoc
    */
-  public async beforeReady(): Promise<void> {
+  public async beforeReady(context: InitContext): Promise<void> {
     const customSchemes = this.schemes
       .map((scheme) => ({
         scheme,

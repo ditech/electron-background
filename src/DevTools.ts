@@ -10,7 +10,7 @@ export type Extension = string | typeof VUEJS3_DEVTOOLS;
 export class DevTools implements InitPlugin {
   constructor(
     private readonly devTools: Array<Extension> = [VUEJS3_DEVTOOLS],
-    private readonly enabled: boolean = app.isPackaged,
+    private readonly enabled: boolean = !app.isPackaged,
   ) { }
 
   public async beforeLoad(context: InitContext): Promise<void> {

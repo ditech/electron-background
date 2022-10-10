@@ -6,7 +6,7 @@ import { InitContext, InitPlugin } from './init';
  * Note that if this plugin is installed, the package must be installed in the application as well.
  */
 export class ElectronSettings implements InitPlugin {
-  public async beforeLoad(context: InitContext): Promise<void> {
+  public async afterReady(context: InitContext): Promise<void> {
     try {
       const { initSettings } = await import('@dimensional-innovations/vue-electron-settings');
       context.settings = await initSettings(context.settings);

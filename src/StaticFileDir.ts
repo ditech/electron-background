@@ -2,12 +2,12 @@ import { protocol } from 'electron';
 import {
   dirname, basename, normalize, join,
 } from 'path';
-import { InitPlugin } from './init';
+import { InitContext, InitPlugin } from './init';
 
 export class StaticFileDir implements InitPlugin {
   constructor(private readonly scheme: string, private readonly dir: string) { }
 
-  public async beforeLoad(): Promise<void> {
+  public async afterReady(context: InitContext): Promise<void> {
     createFileProtocol(this.scheme, this.dir);
   }
 }

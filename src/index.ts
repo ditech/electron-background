@@ -4,6 +4,7 @@ export * from './DevTools';
 export * from './ElectronSettings';
 export * from './KioskBrowserWindow';
 export * from './NodeHeartbeat';
+export * from './PrivilegedSchemes';
 export * from './StaticFileDir';
 export * from './TouchEvents';
 export * from './VueElectronVersion';

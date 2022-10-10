@@ -16,7 +16,7 @@ export class KioskBrowserWindow implements InitPlugin {
     private readonly enableKioskMode: boolean = app.isPackaged,
   ) { }
 
-  public async beforeLoad(context: InitContext): Promise<void> {
+  public async afterReady(context: InitContext): Promise<void> {
     const { appHeight, appWidth, backgroundColor } = context.settings;
     context.browserWindowOptions = getWindowOptions({
       height: appHeight && typeof appHeight === 'number' ? appHeight : 1920,

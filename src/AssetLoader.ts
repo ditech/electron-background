@@ -12,7 +12,7 @@ export class AssetLoader implements InitPlugin {
    */
   constructor(private readonly options?: AssetLoaderOptions) { }
 
-  public async beforeLoad(context: InitContext): Promise<void> {
+  public async afterReady(context: InitContext): Promise<void> {
     try {
       const { initAssetLoader } = await import('@dimensional-innovations/electron-asset-loader');
       initAssetLoader(this.options);

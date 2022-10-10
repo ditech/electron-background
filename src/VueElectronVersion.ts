@@ -13,7 +13,7 @@ export class VueElectronVersion implements InitPlugin {
    */
   constructor(private readonly version?: string) { }
 
-  public async beforeLoad(context: InitContext): Promise<void> {
+  public async afterReady(context: InitContext): Promise<void> {
     try {
       const { initVersion } = await import('@dimensional-innovations/vue-electron-version');
       initVersion(this.version);
