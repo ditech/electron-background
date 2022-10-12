@@ -1,35 +1,125 @@
 # @dimensional-innovations/vue-electron-background
 
+vue-electron-background aims to simplify electron apps by providing a simple api to customize the electron application.
+
 ## Examples
 
-Install
+### Install
+Make sure you have `@dimensional-innovations` private package repository access, more info here:
+https://gitlab.com/dimensional-innovations/di-handbook/-/blob/master/gitlab-packages/gitlab-packages-setup.md
+
+Add the package using npm or yarn:
 ```bash
-npm install @dimensional-innovations/vue-electron-background -S
+npm install @dimensional-innovations/vue-electron-background
 ```
 
 ```bash
 yarn add @dimensional-innovations/vue-electron-background
 ```
 
-Default setup. Only enables kiosk mode and the auto updater in production like (the app is packaged) environments.
-```javascript
-import { init } from '@dimensional-innovations/vue-electron-background';
+### Setup for Vue CLI / Webpack
+
+If you are using the Vue CLI, add the following to your main or background file. 
+```typescript
+import { AutoUpdater, DevTools, VueElectronSettings, init, KioskBrowserWindow, NodeHeartbeat, PrivilegedSchemes, StaticFileDir, TouchEvents, VueElectronVersion } from '@dimensional-innovations/vue-electron-background';
+import { config } from '../package';
+
+init({
+  appUrl: process.env.WEBPACK_DEV_URL ? process.env.WEBPACK_DEV_URL : 'app://index.html',
+  config,
+  plugins: [
+    new AutoUpdater(),
+    new DevTools(),
+    new KioskBrowserWindow(),
+    new NodeHeartbeat(),
+    new PrivilegedSchemes(['app']),
+    new StaticFileDir('app', __dirname),
+    new StaticFileDir('media', join(__static, 'media')),
+    new TouchEvents(),
+    new VueElectronSettings(),
+    new VueElectronVersion()
+  ]
+});
+```
+
+### Setup for Vite
+
+If you are using Vite, add the following to your main or background file. 
+```typescript
+import { AutoUpdater, DevTools, VueElectronSettings, init, KioskBrowserWindow, NodeHeartbeat, PrivilegedSchemes, StaticFileDir, TouchEvents, VueElectronVersion } from '@dimensional-innovations/vue-electron-background';
 import { app } from 'electron';
 import { config } from '../package';
 
 init({
-  enableKioskMode: app.isPackaged,
-  enableAutoUpdater: app.isPackaged,
+  appUrl: app.isPackaged 
+    ? `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}` 
+    : `file://${join(__dirname, 'index.html')}`,
   config,
+  plugins: [
+    new AutoUpdater(),
+    new DevTools(),
+    new KioskBrowserWindow(),
+    new NodeHeartbeat(),
+    new StaticFileDir('media', app.isPackaged ? join(__dirname, 'media') : join(__dirname, '../public/media')),
+    new TouchEvents(),
+    new VueElectronSettings(),
+    new VueElectronVersion()
+  ]
 });
 ```
 
-## Features
-This package acts as the default background script for vue-electron projects at DI. It does the following:
+## Plugins
 
-1. Ability to enable a kiosk mode. Kiosk mode loads the electron app into full screen and makes it near impossible for the user to exit. This mode is disabled by default. To enable: `init({ enableKioskMode: true })`. 
-1. Enables auto updating from S3 buckets by default. Any time a new version of the electron app is published to the bucket, the auto updater will pull down a new version, install and restart immediately. To disable: `init({enableAutoUpdater: false})`
-1. Enables touch events by default. Disable by: `init({ enableTouchEvents: false, })`
-1. [Registers a scheme as privledged](https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes) by default. To disable: `init({registerSchemesAsPrivileged: false, })`
-1. Sets up a variety of handlers to listen for app ready, close, quit and exit.
-1. Loads the config from the package.json into [electron-settings](https://electron-settings.js.org/).
+By default, the init method creates a BrowserWindow and loads the specified application into the window. All other features of an application are managed through plugins. Each plugin customizes the application instance during the init process. The built-in plugins are listed below.
+
+If a feature you need isn't listed below, you can still add it to the init script by defining the plugin in your application. For example, if we wanted to customize the autoplay policy flag in electron, we would add the following to our init method.
+```typescript
+import { init } from '@dimensional-innovations/vue-electron-background';
+import { app } from 'electron';
+
+init({
+  appUrl: ...,
+  config,
+  plugins: [
+    ...,
+    { beforeReady: () => app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required') }
+    ...,
+  ]
+});
+```
+
+### AssetLoader
+Initializes the [@dimensional-innovations/electron-asset-loader](https://gitlab.com/dimensional-innovations/electron-asset-loader) package. Note that if this plugin is included, the package must be installed in the application as well.
+
+### AutoUpdater
+Starts the auto update process, checking for updates every 3 minutes and automatically installing the update once one is found.
+
+For more info, see https://www.electron.build/auto-update
+
+### DevTools
+Installs dev tools extensions and opens the devTools panel.
+
+### KioskBrowserWindow
+Enables kiosk mode in the BrowserWindow when the application is packaged.
+
+### NodeHeartbeat
+Starts a heartbeat, which reports uptime to betteruptime.com. Requires that "heartbeatApiKey" is set in the settings.
+
+### PrivilegedSchemes
+Registers schemes as privileged.
+
+### StaticFileDir
+Registers a custom scheme to serve static files. 
+
+### TouchEvents
+Enables touch events in the app.
+
+### VueElectronSettings
+Initializes [@dimensional-innovations/vue-electron-settings](https://gitlab.com/dimensional-innovations/vue-electron-settings) package, and updates the config used in `init` to match. Note that if this plugin is included, the package must be installed in the application as well.
+
+### VueElectronVersion
+Initializes the [@dimensional-innovations/vue-electron-version](https://gitlab.com/dimensional-innovations/vue-electron-version) package. If this plugin is included, the package must also be installed in the app.
+
+## API Reference
+
+For the complete API exported by this package, see API.md
