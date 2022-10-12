@@ -30,6 +30,11 @@ and automatically installing the update once one is found.</p>
 <dt><a href="#PrivilegedSchemes">PrivilegedSchemes</a></dt>
 <dd><p>Registers schemes as privileged.</p>
 </dd>
+<dt><a href="#SingleInstance">SingleInstance</a></dt>
+<dd><p>Enforces that only a single instance of the app can run at the same time.
+If a second instance of the is opened, the second instance is closed and
+the first instance is brought back into focus.</p>
+</dd>
 <dt><a href="#StaticFileDir">StaticFileDir</a></dt>
 <dd><p>Registers a custom scheme to serve static files.</p>
 </dd>
@@ -50,16 +55,8 @@ settings on the InitContext to match.</p>
 ## Functions
 
 <dl>
-<dt><a href="#startAutoUpdater">startAutoUpdater(autoUpdaterChannel)</a></dt>
-<dd><p>Starts the auto update process, checking for updates every 3 minutes
-and automatically installing the update once one is found.</p>
-<p>For more info, see <a href="https://www.electron.build/auto-update">https://www.electron.build/auto-update</a></p>
-</dd>
 <dt><a href="#init">init(options)</a> ⇒</dt>
 <dd><p>Initializes the application, creating a browser window, and loads the provided app url.</p>
-</dd>
-<dt><a href="#getWindowOptions">getWindowOptions(options, enableKioskMode)</a> ⇒</dt>
-<dd><p>Combines the provided window options with defaults for a BrowserWindow.</p>
 </dd>
 <dt><a href="#createFileProtocol">createFileProtocol(scheme, sourceDirectory)</a></dt>
 <dd><p>Wrapper around <code>protocol.registerFileProtocol</code> that serves files from the given source directory.
@@ -159,11 +156,6 @@ Starts a "heartbeat", which reports uptime to betteruptime.com.Requires that h
 Registers schemes as privileged.
 
 **Kind**: global class  
-
-* [PrivilegedSchemes](#PrivilegedSchemes)
-    * [new PrivilegedSchemes(schemes)](#new_PrivilegedSchemes_new)
-    * [.beforeReady()](#PrivilegedSchemes+beforeReady)
-
 <a name="new_PrivilegedSchemes_new"></a>
 
 ### new PrivilegedSchemes(schemes)
@@ -172,10 +164,12 @@ Registers schemes as privileged.
 | --- | --- |
 | schemes | The schemes to register as privileged. |
 
-<a name="PrivilegedSchemes+beforeReady"></a>
+<a name="SingleInstance"></a>
 
-### privilegedSchemes.beforeReady()
-**Kind**: instance method of [<code>PrivilegedSchemes</code>](#PrivilegedSchemes)  
+## SingleInstance
+Enforces that only a single instance of the app can run at the same time.If a second instance of the is opened, the second instance is closed andthe first instance is brought back into focus.
+
+**Kind**: global class  
 <a name="StaticFileDir"></a>
 
 ## StaticFileDir
@@ -217,17 +211,6 @@ Initializes the `@dimensional-innovations/vue-electron-version` package.If thi
 | --- | --- |
 | version | The application version. Defaults to `app.getVersion()`. |
 
-<a name="startAutoUpdater"></a>
-
-## startAutoUpdater(autoUpdaterChannel)
-Starts the auto update process, checking for updates every 3 minutesand automatically installing the update once one is found.For more info, see https://www.electron.build/auto-update
-
-**Kind**: global function  
-
-| Param | Description |
-| --- | --- |
-| autoUpdaterChannel | The update channel the autoUpdate watches. |
-
 <a name="init"></a>
 
 ## init(options) ⇒
@@ -239,19 +222,6 @@ Initializes the application, creating a browser window, and loads the provided a
 | Param | Description |
 | --- | --- |
 | options | Options used to define how the application is initialized. |
-
-<a name="getWindowOptions"></a>
-
-## getWindowOptions(options, enableKioskMode) ⇒
-Combines the provided window options with defaults for a BrowserWindow.
-
-**Kind**: global function  
-**Returns**: - The options that can be passed to the BrowserWindow constructor.  
-
-| Param | Description |
-| --- | --- |
-| options | The options to include with the default options. |
-| enableKioskMode | If true, additional defaults will be included to support kiosk mode. |
 
 <a name="createFileProtocol"></a>
 

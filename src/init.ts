@@ -75,8 +75,7 @@ export interface InitPlugin {
 
 export interface InitOptions {
   /**
-   * The url to load once the the app has been created. You can also pass an object in for the app url in order to define a
-   * custom scheme to serve the app from.
+   * The url to load once the the app has been created.
    */
   appUrl: string;
 
