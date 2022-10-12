@@ -1,5 +1,7 @@
 import settings from 'electron-settings';
-import { app, protocol, BrowserWindow } from 'electron';
+import {
+  app, protocol, BrowserWindow, BrowserWindowConstructorOptions,
+} from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { autoUpdater } from 'electron-updater';
 import electronLog from 'electron-log';
@@ -7,7 +9,8 @@ import {
   basename, dirname, join, normalize,
 } from 'path';
 
-/* global __static */
+// eslint-disable-next-line no-underscore-dangle
+declare const __static: string;
 
 // https://github.com/webpack/webpack/issues/5392
 // eslint-disable-next-line prefer-destructuring
@@ -16,10 +19,10 @@ const WEBPACK_DEV_SERVER_URL = process.env.WEBPACK_DEV_SERVER_URL;
 // setup configurable default window options
 // if running in a production environment, add properties for full
 // screen kiosk mode with an unclosable window
-async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
+async function getWindowOptions(browserWindowOptionOverrides: Partial<BrowserWindowConstructorOptions>, enableKioskMode: boolean) {
   const {
     appWidth, appHeight, backgroundColor,
-  } = await settings.get('config') || {};
+  } = await settings.get('config') as any || {};
 
   const windowDefaults = {
     width: 1920,
@@ -63,7 +66,7 @@ async function getWindowOptions(browserWindowOptionOverrides, enableKioskMode) {
   };
 }
 
-function createFileProtocol(scheme, sourceDirectory) {
+function createFileProtocol(scheme: string, sourceDirectory: string) {
   protocol.registerFileProtocol(scheme, (request, respond) => {
     const requestPath = decodeURI(request.url.replace(`${scheme}://`, ''));
     const requestDir = dirname(requestPath);
@@ -71,6 +74,17 @@ function createFileProtocol(scheme, sourceDirectory) {
     const path = normalize(join(sourceDirectory, requestDir, requestFile));
     respond({ path });
   });
+}
+
+export interface InitOptions {
+  config?: any;
+  enableTouchEvents?: boolean;
+  enableAutoUpdater?: boolean;
+  enableKioskMode?: boolean;
+  registerSchemesAsPrivileged?: boolean;
+  browserWindowOptionOverrides?: Partial<BrowserWindowConstructorOptions>;
+  devTools?: Array<typeof VUEJS_DEVTOOLS>;
+  staticFileDirs?: Array<string>;
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -83,7 +97,7 @@ export async function init({
   browserWindowOptionOverrides = {},
   devTools = [VUEJS_DEVTOOLS],
   staticFileDirs = ['media'],
-}) {
+}: InitOptions) {
   // bypasses content security policy for resources
   // https://www.electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
   if (registerSchemesAsPrivileged) {
@@ -104,7 +118,7 @@ export async function init({
   }
 
   // create the browser window with the correct options
-  let browserWindow = new BrowserWindow(
+  let browserWindow: BrowserWindow | null = new BrowserWindow(
     await getWindowOptions(browserWindowOptionOverrides, enableKioskMode),
   );
 
@@ -120,7 +134,7 @@ export async function init({
     // await installExtension(devTools);
     try {
       await installExtension(devTools);
-    } catch (e) {
+    } catch (e: any) {
       console.error('Vue Devtools failed to install:', e.toString());
     }
   }
@@ -144,7 +158,7 @@ export async function init({
   if (enableAutoUpdater) {
     const threeMinutes = 180000;
 
-    const { autoUpdaterChannel } = await settings.get('config');
+    const { autoUpdaterChannel } = await settings.get('config') as any;
     autoUpdater.channel = autoUpdaterChannel;
     autoUpdater.autoDownload = true;
     autoUpdater.logger = electronLog;
