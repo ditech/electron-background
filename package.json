@@ -38,6 +38,7 @@
     "@dimensional-innovations/electron-asset-loader": "^1.2.1",
     "@dimensional-innovations/vue-electron-settings": "^0.0.2",
     "@dimensional-innovations/vue-electron-version": "^1.0.3",
+    "@dimensional-innovations/vue-logger": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.39.0",
     "@typescript-eslint/parser": "^5.39.0",
     "electron": "^16",
@@ -51,6 +52,7 @@
     "@dimensional-innovations/electron-asset-loader": ">=1.0.0",
     "@dimensional-innovations/vue-electron-settings": ">=0.0.2",
     "@dimensional-innovations/vue-electron-version": ">=1.0.0",
+    "@dimensional-innovations/vue-logger": ">=2.0.0",
     "electron": ">=16.0.0"
   },
   "peerDependenciesMeta": {
@@ -61,6 +63,9 @@
       "optional": true
     },
     "@dimensional-innovations/vue-electron-version": {
+      "optional": true
+    },
+    "@dimensional-innovations/vue-logger": {
       "optional": true
     }
   }

@@ -50,6 +50,10 @@ settings on the InitContext to match.</p>
 <dd><p>Initializes the <code>@dimensional-innovations/vue-electron-version</code> package.</p>
 <p>If this plugin is included, the package must also be installed in the app.</p>
 </dd>
+<dt><a href="#VueLogger">VueLogger</a></dt>
+<dd><p>Initializes the <code>@dimensional-innovations/vue-logger</code> package.</p>
+<p>If this plugin is included, the package must also be installed in the app.</p>
+</dd>
 </dl>
 
 ## Functions
@@ -210,6 +214,20 @@ Initializes the `@dimensional-innovations/vue-electron-version` package.If thi
 | Param | Description |
 | --- | --- |
 | version | The application version. Defaults to `app.getVersion()`. |
+
+<a name="VueLogger"></a>
+
+## VueLogger
+Initializes the `@dimensional-innovations/vue-logger` package.If this plugin is included, the package must also be installed in the app.
+
+**Kind**: global class  
+<a name="new_VueLogger_new"></a>
+
+### new VueLogger(transports)
+
+| Param | Description |
+| --- | --- |
+| transports | The transports to register. |
 
 <a name="init"></a>
 
