@@ -12,9 +12,9 @@ export class InitContext {
     public appUrl: string,
 
     /**
-     * Application settings used by the app and/or plugins.
+     * Application config used by the app and/or plugins.
      */
-    public settings: Record<string, string | number | boolean>,
+    public config: Record<string, string | number | boolean>,
 
     /**
      * Options used to create the BrowserWindow. These can be modified in `beforeReady` or
@@ -83,7 +83,7 @@ export interface InitOptions {
   /**
    * The default application settings.
    */
-  settings?: Record<string, string | number | boolean>;
+  config?: Record<string, string | number | boolean>;
 
   /**
    * The list of plugins to load with the application.
@@ -99,7 +99,7 @@ export interface InitOptions {
  */
 export async function init({
   appUrl,
-  settings = {},
+  config = {},
   plugins = [],
 }: InitOptions): Promise<InitContext> {
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
@@ -109,7 +109,7 @@ export async function init({
   });
   process.on('SIGTERM', app.quit);
 
-  const context = new InitContext(appUrl, settings, { height: 1920, width: 1080, backgroundColor: '#000' }, null, log);
+  const context = new InitContext(appUrl, config, { height: 1920, width: 1080, backgroundColor: '#000' }, null, log);
 
   for (const plugin of plugins) {
     if (plugin.beforeReady) {
@@ -144,21 +144,3 @@ export async function init({
 
   return context;
 }
-
-/**
- * init({
- *  appUrl: process.env.WEBPACK_DEV_URL ? process.env.WEBPACK_DEV_URL : 'app://index.html',
- *  plugins: [
- *    new ElectronSettings(),
- *    new TouchEvents(),
- *    new AutoUpdater(),
- *    new NodeHeartbeat(),
- *    new KioskBrowserWindow(),
- *    new AssetLoader(),
- *    new PrivilegedSchemes(['app']),
- *    new DevTools(),
- *    new StaticFileDir('app', __dirname),
- *    new StaticFileDir('media', join(__static, 'media'))
- *  ]
- * });
- */

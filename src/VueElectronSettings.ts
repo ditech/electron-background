@@ -10,7 +10,7 @@ export class VueElectronSettings implements InitPlugin {
   public async afterReady(context: InitContext): Promise<void> {
     try {
       const { initSettings } = await import('@dimensional-innovations/vue-electron-settings');
-      context.settings = await initSettings(context.settings);
+      context.config = await initSettings(context.config);
     } catch (error) {
       context.log.error('Failed to initialize vue-electron-settings');
       context.log.error(error);

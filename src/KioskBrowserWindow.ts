@@ -17,20 +17,53 @@ export class KioskBrowserWindow implements InitPlugin {
   ) { }
 
   public async afterReady(context: InitContext): Promise<void> {
-    const { appHeight, appWidth, backgroundColor } = context.settings;
-    context.browserWindowOptions = getWindowOptions({
+    const { appHeight, appWidth, backgroundColor } = context.config;
+    context.browserWindowOptions = this.getWindowOptions({
       ...context.browserWindowOptions,
-      height: appHeight && typeof appHeight === 'number' 
-        ? appHeight 
+      height: appHeight && typeof appHeight === 'number'
+        ? appHeight
         : context.browserWindowOptions.height,
-      width: appWidth && typeof appWidth === 'number' 
-        ? appWidth 
+      width: appWidth && typeof appWidth === 'number'
+        ? appWidth
         : context.browserWindowOptions.width,
-      backgroundColor: backgroundColor && typeof backgroundColor === 'string' 
-        ? backgroundColor 
+      backgroundColor: backgroundColor && typeof backgroundColor === 'string'
+        ? backgroundColor
         : context.browserWindowOptions.backgroundColor,
       ...this.options,
     }, this.enableKioskMode);
+  }
+
+  private getWindowOptions(options: BrowserWindowConstructorOptions, enableKioskMode: boolean): BrowserWindowConstructorOptions {
+    const defaultWindowOptions = {
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true,
+        webSecurity: false,
+      },
+    };
+
+    if (enableKioskMode) {
+      return {
+        ...defaultWindowOptions,
+        acceptFirstMouse: true,
+        alwaysOnTop: true,
+        autoHideMenuBar: true,
+        fullscreen: true,
+        kiosk: true,
+        minimizable: false,
+        movable: false,
+        x: 0,
+        y: 0,
+        ...options,
+        closable: true, // !!! enabling will break auto updating !!!
+      };
+    }
+
+    return {
+      ...defaultWindowOptions,
+      ...options,
+    };
   }
 }
 

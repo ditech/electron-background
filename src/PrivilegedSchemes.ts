@@ -12,9 +12,6 @@ export class PrivilegedSchemes implements InitPlugin {
    */
   constructor(private readonly schemes: Array<string>) { }
 
-  /**
-   * @inheritdoc
-   */
   public async beforeReady(): Promise<void> {
     const customSchemes = this.schemes
       .map((scheme) => ({

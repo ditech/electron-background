@@ -16,7 +16,7 @@ export class NodeHeartbeat implements InitPlugin {
   constructor(private readonly enabled: boolean = app.isPackaged) { }
 
   public async afterLoad(context: InitContext): Promise<void> {
-    const { heartbeatApiKey } = context.settings;
+    const { heartbeatApiKey } = context.config;
     if (this.enabled && heartbeatApiKey && typeof heartbeatApiKey === 'string') {
       new Heartbeat({
         apiKey: heartbeatApiKey,
