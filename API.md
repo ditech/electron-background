@@ -13,9 +13,9 @@ and automatically installing the update once one is found.</p>
 <dt><a href="#DevTools">DevTools</a></dt>
 <dd><p>Installs dev tools extensions and opens the devTools panel.</p>
 </dd>
-<dt><a href="#ElectronSettings">ElectronSettings</a></dt>
-<dd><p>Manages application settings with <code>@dimensional-innovations/vue-electron-settings</code>.</p>
-<p>Note that if this plugin is installed, the package must be installed in the application as well.</p>
+<dt><a href="#FullScreenBrowserWindow">FullScreenBrowserWindow</a></dt>
+<dd><p>Ensures the browser window will always be fullscreen. Generally, KioskBrowserWindow is preferred
+over this plugin, but there are times when app cannot be in kiosk mode.</p>
 </dd>
 <dt><a href="#InitContext">InitContext</a></dt>
 <dd><p>The context object passed to each plugin during the init process.</p>
@@ -113,12 +113,21 @@ Installs dev tools extensions and opens the devTools panel.
 | devTools | The extensions to install. Defaults to Vue3 dev tools. |
 | enabled | Indicates if the plugin is enabled. Used to disable the plugin when the app is packaged. Defaults to `!app.isPackaged`. |
 
-<a name="ElectronSettings"></a>
+<a name="FullScreenBrowserWindow"></a>
 
-## ElectronSettings
-Manages application settings with `@dimensional-innovations/vue-electron-settings`.Note that if this plugin is installed, the package must be installed in the application as well.
+## FullScreenBrowserWindow
+Ensures the browser window will always be fullscreen. Generally, KioskBrowserWindow is preferredover this plugin, but there are times when app cannot be in kiosk mode.
 
 **Kind**: global class  
+<a name="new_FullScreenBrowserWindow_new"></a>
+
+### new FullScreenBrowserWindow(options, enabled)
+
+| Param | Description |
+| --- | --- |
+| options | Additional options to apply to the BrowserWindow. |
+| enabled | Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`. |
+
 <a name="InitContext"></a>
 
 ## InitContext
