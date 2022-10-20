@@ -1,15 +1,18 @@
-import { app, BrowserWindowConstructorOptions, Display } from "electron";
+import { app, BrowserWindowConstructorOptions } from "electron";
 import { InitContext, InitPlugin } from "./init";
 
 /**
  * Ensures the browser window will always be fullscreen. Generally, KioskBrowserWindow is preferred
  * over this plugin, but there are times when app cannot be in kiosk mode.
- * 
- * @param options - Additional options to apply to the BrowserWindow.
- * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`.
  */
 export class FullScreenBrowserWindow implements InitPlugin {
 
+  /**
+   * @constructor
+   * 
+   * @param options - Additional options to apply to the BrowserWindow.
+   * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`.
+   */
   constructor(
     private readonly options: BrowserWindowConstructorOptions,
     private readonly enabled: boolean = app.isPackaged
