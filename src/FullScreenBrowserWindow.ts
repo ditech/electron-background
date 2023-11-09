@@ -9,14 +9,17 @@ export class FullScreenBrowserWindow implements InitPlugin {
 
   /**
    * @constructor
-   * 
+   *
    * @param options - Additional options to apply to the BrowserWindow.
    * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`.
    */
   constructor(
     private readonly options: BrowserWindowConstructorOptions,
     private readonly enabled: boolean = app.isPackaged
-  ) { }
+  ) {
+      this.options = options;
+      this.enabled = enabled;
+  }
 
   public async afterReady(context: InitContext): Promise<void> {
     context.browserWindowOptions = this.getWindowOptions(this.options, this.enabled);
@@ -33,9 +36,10 @@ export class FullScreenBrowserWindow implements InitPlugin {
         context.browserWindow.setBounds(screen.getPrimaryDisplay().bounds);
       }
     };
+    resizeWindow();
     screen.on('display-added', resizeWindow);
     screen.on('display-metrics-changed', resizeWindow);
-    screen.on('display-removed', resizeWindow);    
+    screen.on('display-removed', resizeWindow);
   }
 
   private getWindowOptions(options: BrowserWindowConstructorOptions, fullscreen: boolean): BrowserWindowConstructorOptions {
