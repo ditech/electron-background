@@ -33,10 +33,10 @@
   resolved "https://gitlab.com/api/v4/projects/38636805/packages/npm/@dimensional-innovations/electron-asset-loader/-/@dimensional-innovations/electron-asset-loader-1.2.1.tgz#36b9d80b868834d8798fac2ac5c08339e566d4d3"
   integrity sha1-NrnYC4aINNh5j6wqxcCDOeVm1NM=
 
-"@dimensional-innovations/node-heartbeat@^0.0.4":
-  version "0.0.4"
-  resolved "https://gitlab.com/api/v4/projects/22260130/packages/npm/@dimensional-innovations/node-heartbeat/-/@dimensional-innovations/node-heartbeat-0.0.4.tgz#12de82e07f8699ce618e411467a6a47c16a883a2"
-  integrity sha1-Et6C4H+Gmc5hjkEUZ6akfBaog6I=
+"@dimensional-innovations/node-heartbeat@^0.0.9":
+  version "0.0.9"
+  resolved "https://gitlab.com/api/v4/projects/22260130/packages/npm/@dimensional-innovations/node-heartbeat/-/@dimensional-innovations/node-heartbeat-0.0.9.tgz#92989344fd53ce271dfab7ab3d9c50f32622fcaa"
+  integrity sha1-kpiTRP1Tzicd+rerPZxQ8yYi/Ko=
   dependencies:
     axios "^0.21.0"
 

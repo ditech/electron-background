@@ -1,11 +1,9 @@
-import { Heartbeat, Modes } from '@dimensional-innovations/node-heartbeat';
+import { Heartbeat, Modes, HeartbeatOptions } from '@dimensional-innovations/node-heartbeat';
 import { app } from 'electron';
 import { InitContext, InitPlugin } from './init';
 
-export interface NodeHeartbeatOptions {
+export interface NodeHeartbeatOptions extends Omit<HeartbeatOptions, 'apiKey' | 'enabled' | 'mode'>  {
   heartbeatApiKey?: string;
-  pollInterval?: number;
-  isBetterStack?: boolean;
 }
 
 /**
