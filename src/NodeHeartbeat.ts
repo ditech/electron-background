@@ -2,6 +2,12 @@ import { Heartbeat, Modes } from '@dimensional-innovations/node-heartbeat';
 import { app } from 'electron';
 import { InitContext, InitPlugin } from './init';
 
+export interface NodeHeartbeatOptions {
+  heartbeatApiKey?: string;
+  pollInterval?: number;
+  isBetterStack?: boolean;
+}
+
 /**
  * Starts a "heartbeat", which reports uptime to betteruptime.com.
  * 
@@ -12,13 +18,19 @@ export class NodeHeartbeat implements InitPlugin {
    * @constructor
    * 
    * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin during development. Defaults to `app.isPackaged`.
+   * @param options - Options passed to the node heartbeat instance.
    */
-  constructor(private readonly enabled: boolean = app.isPackaged) { }
+  constructor(
+    private readonly enabled: boolean = app.isPackaged, 
+    private readonly options: NodeHeartbeatOptions
+  ) { }
 
   public async afterLoad(context: InitContext): Promise<void> {
-    const { heartbeatApiKey } = context.config;
+    const heartbeatApiKey = context.config.heartbeatApiKey || this.options.heartbeatApiKey;
+
     if (this.enabled && heartbeatApiKey && typeof heartbeatApiKey === 'string') {
       new Heartbeat({
+        ...this.options,
         apiKey: heartbeatApiKey,
         mode: Modes.SERVER,
       }).start();
