@@ -31,6 +31,7 @@ export class NodeHeartbeat implements InitPlugin {
         ...this.options,
         apiKey: heartbeatApiKey,
         mode: Modes.SERVER,
+        enabled: true,
       }).start();
     } else if (this.enabled) {
       context.log.warn('heartbeatApiKey was not in the settings. Heartbeat was not started.');
