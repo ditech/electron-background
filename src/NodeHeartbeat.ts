@@ -20,7 +20,7 @@ export class NodeHeartbeat implements InitPlugin {
    */
   constructor(
     private readonly enabled: boolean = app.isPackaged, 
-    private readonly options: NodeHeartbeatOptions
+    private readonly options: NodeHeartbeatOptions = {}
   ) { }
 
   public async afterLoad(context: InitContext): Promise<void> {
