@@ -8,14 +8,6 @@ cache:
   paths:
     - node_modules/
 
-include:
-  - project: 'dimensional-innovations/ci-cd'
-    ref: master
-    file: '/javascript/auth-with-di-package-registry.yml'
-  - project: 'dimensional-innovations/ci-cd'
-    ref: master
-    file: '/javascript/release-package.yml'
-
 build:
   stage: build
   script:
