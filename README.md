@@ -10,18 +10,18 @@ https://gitlab.com/dimensional-innovations/di-handbook/-/blob/master/gitlab-pack
 
 Add the package using npm or yarn:
 ```bash
-npm install @dimensional-innovations/vue-electron-background
+npm install @dimensional-innovations/electron-background
 ```
 
 ```bash
-yarn add @dimensional-innovations/vue-electron-background
+yarn add @dimensional-innovations/electron-background
 ```
 
 ### Setup for Vue CLI / Webpack
 
 If you are using the Vue CLI, add the following to your main or background file. 
 ```typescript
-import { AutoUpdater, DevTools, VueElectronSettings, init, KioskBrowserWindow, NodeHeartbeat, PrivilegedSchemes, StaticFileDir, TouchEvents, VueElectronVersion } from '@dimensional-innovations/vue-electron-background';
+import { AutoUpdater, DevTools, VueElectronSettings, init, KioskBrowserWindow, PrivilegedSchemes, StaticFileDir, TouchEvents, VueElectronVersion } from '@dimensional-innovations/electron-background';
 import { config } from '../package';
 
 init({
@@ -31,10 +31,8 @@ init({
     new AutoUpdater(),
     new DevTools(),
     new KioskBrowserWindow(),
-    new NodeHeartbeat(),
     new PrivilegedSchemes(['app']),
     new StaticFileDir('app', __dirname),
-    new StaticFileDir('media', join(__static, 'media')),
     new TouchEvents(),
     new VueElectronSettings(),
     new VueElectronVersion()
@@ -46,7 +44,7 @@ init({
 
 If you are using Vite, add the following to your main or background file. 
 ```typescript
-import { AutoUpdater, DevTools, VueElectronSettings, init, KioskBrowserWindow, NodeHeartbeat, PrivilegedSchemes, StaticFileDir, TouchEvents, VueElectronVersion } from '@dimensional-innovations/vue-electron-background';
+import { AutoUpdater, DevTools, VueElectronSettings, init, KioskBrowserWindow, PrivilegedSchemes, TouchEvents, VueElectronVersion } from '@dimensional-innovations/electron-background';
 import { app } from 'electron';
 import { config } from '../package';
 
@@ -59,8 +57,6 @@ init({
     new AutoUpdater(),
     new DevTools(),
     new KioskBrowserWindow(),
-    new NodeHeartbeat(),
-    new StaticFileDir('media', app.isPackaged ? join(__dirname, 'media') : join(__dirname, '../public/media')),
     new TouchEvents(),
     new VueElectronSettings(),
     new VueElectronVersion()
@@ -76,6 +72,7 @@ If a feature you need isn't listed below, you can still add it to the init scrip
 ```typescript
 import { init } from '@dimensional-innovations/vue-electron-background';
 import { app } from 'electron';
+import { config } from '../package';
 
 init({
   appUrl: ...,
@@ -88,9 +85,6 @@ init({
 });
 ```
 
-### AssetLoader
-Initializes the [@dimensional-innovations/electron-asset-loader](https://gitlab.com/dimensional-innovations/electron-asset-loader) package. Note that if this plugin is included, the package must be installed in the application as well.
-
 ### AutoUpdater
 Starts the auto update process, checking for updates every 3 minutes and automatically installing the update once one is found.
 
@@ -102,7 +96,7 @@ Installs dev tools extensions and opens the devTools panel.
 ### KioskBrowserWindow
 Enables kiosk mode in the BrowserWindow when the application is packaged.
 
-### NodeHeartbeat
+### BetterUptimeHeartbeat
 Starts a heartbeat, which reports uptime to betteruptime.com. Requires that "heartbeatApiKey" is set in the settings.
 
 ### PrivilegedSchemes
@@ -114,12 +108,5 @@ Registers a custom scheme to serve static files.
 ### TouchEvents
 Enables touch events in the app.
 
-### VueElectronSettings
-Initializes [@dimensional-innovations/vue-electron-settings](https://gitlab.com/dimensional-innovations/vue-electron-settings) package, and updates the config used in `init` to match. Note that if this plugin is included, the package must be installed in the application as well.
-
-### VueElectronVersion
-Initializes the [@dimensional-innovations/vue-electron-version](https://gitlab.com/dimensional-innovations/vue-electron-version) package. If this plugin is included, the package must also be installed in the app.
-
 ## API Reference
-
 For the complete API exported by this package, see API.md
