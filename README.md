@@ -46,9 +46,9 @@ import { app } from 'electron';
 import { config } from '../package';
 
 init({
-  appUrl: app.isPackaged 
-    ? `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}` 
-    : `file://${join(__dirname, 'index.html')}`,
+  appUrl: process.env['ELECTRON_RENDERER_URL']
+    ? process.env['ELECTRON_RENDERER_URL']
+    : `file://${join(__dirname, '../renderer/index.html')}`,
   config,
   plugins: [
     new AutoUpdater(),
