@@ -13,7 +13,7 @@ export class DefaultBrowserWindow implements InitPlugin {
    * @param options - Additional options to apply to the browser window.
    */
   constructor(
-    protected readonly options: BrowserWindowConstructorOptions
+    protected readonly options: BrowserWindowConstructorOptions = {}
   ) { }
 
   public async afterReady(context: InitContext): Promise<void> {
@@ -65,7 +65,7 @@ export class KioskBrowserWindow extends DefaultBrowserWindow {
    * @param enableKioskMode - Indicates if the plugin is enabled. Used to disabled kiosk mode in development. Defaults to `app.isPackaged`
    */
   constructor(
-    options: BrowserWindowConstructorOptions,
+    options: BrowserWindowConstructorOptions = {},
     private readonly enabled: boolean = app.isPackaged
   ) {
     super(options);
@@ -104,7 +104,7 @@ export class FullScreenBrowserWindow extends DefaultBrowserWindow {
    * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`.
    */
   constructor(
-    options: BrowserWindowConstructorOptions,
+    options: BrowserWindowConstructorOptions = {},
     private readonly enabled: boolean = app.isPackaged
   ) {
     super(options);
