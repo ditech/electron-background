@@ -47,7 +47,6 @@ release_npm_publish:
   stage: release
   only:
     - tags
-  image: node:14.18.1
   variables:
     NPM_TOKEN: $NPM_TOKEN
   script:
@@ -64,7 +63,6 @@ release_gitlab_publish:
   stage: release
   only:
     - tags
-  image: node:14.18.1
   script:
     - |
       {
