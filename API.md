@@ -10,18 +10,22 @@
 and automatically installing the update once one is found.</p>
 <p>For more info, see <a href="https://www.electron.build/auto-update">https://www.electron.build/auto-update</a></p>
 </dd>
-<dt><a href="#DevTools">DevTools</a></dt>
-<dd><p>Installs dev tools extensions and opens the devTools panel.</p>
+<dt><a href="#DefaultBrowserWindow">DefaultBrowserWindow</a></dt>
+<dd><p>Applies default options to the browser window. If <code>appHeight</code>, <code>appWidth</code>, or <code>backgroundColor</code> are included in
+app config, they will be added to the window options as well.</p>
+</dd>
+<dt><a href="#KioskBrowserWindow">KioskBrowserWindow</a></dt>
+<dd><p>Enables kiosk mode in the BrowserWindow when the application is packaged.</p>
 </dd>
 <dt><a href="#FullScreenBrowserWindow">FullScreenBrowserWindow</a></dt>
 <dd><p>Ensures the browser window will always be fullscreen. Generally, KioskBrowserWindow is preferred
 over this plugin, but there are times when app cannot be in kiosk mode.</p>
 </dd>
+<dt><a href="#DevTools">DevTools</a></dt>
+<dd><p>Installs dev tools extensions and opens the devTools panel.</p>
+</dd>
 <dt><a href="#InitContext">InitContext</a></dt>
 <dd><p>The context object passed to each plugin during the init process.</p>
-</dd>
-<dt><a href="#KioskBrowserWindow">KioskBrowserWindow</a></dt>
-<dd><p>Enables kiosk mode in the BrowserWindow when the application is packaged.</p>
 </dd>
 <dt><a href="#NodeHeartbeat">NodeHeartbeat</a></dt>
 <dd><p>Starts a &quot;heartbeat&quot;, which reports uptime to betteruptime.com.</p>
@@ -98,20 +102,34 @@ Starts the auto update process, checking for updates every 3 minutesand automat
 | --- | --- |
 | enabled | Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`. |
 
-<a name="DevTools"></a>
+<a name="DefaultBrowserWindow"></a>
 
-## DevTools
-Installs dev tools extensions and opens the devTools panel.
+## DefaultBrowserWindow
+Applies default options to the browser window. If `appHeight`, `appWidth`, or `backgroundColor` are included inapp config, they will be added to the window options as well.
 
 **Kind**: global class  
-<a name="new_DevTools_new"></a>
+<a name="new_DefaultBrowserWindow_new"></a>
 
-### new DevTools(devTools, enabled)
+### new DefaultBrowserWindow(options)
 
 | Param | Description |
 | --- | --- |
-| devTools | The extensions to install. Defaults to Vue3 dev tools. |
-| enabled | Indicates if the plugin is enabled. Used to disable the plugin when the app is packaged. Defaults to `!app.isPackaged`. |
+| options | Additional options to apply to the browser window. |
+
+<a name="KioskBrowserWindow"></a>
+
+## KioskBrowserWindow
+Enables kiosk mode in the BrowserWindow when the application is packaged.
+
+**Kind**: global class  
+<a name="new_KioskBrowserWindow_new"></a>
+
+### new KioskBrowserWindow(options, enableKioskMode)
+
+| Param | Description |
+| --- | --- |
+| options | Additional options to apply to the BrowserWindow. |
+| enableKioskMode | Indicates if the plugin is enabled. Used to disabled kiosk mode in development. Defaults to `app.isPackaged` |
 
 <a name="FullScreenBrowserWindow"></a>
 
@@ -128,27 +146,27 @@ Ensures the browser window will always be fullscreen. Generally, KioskBrowserWin
 | options | Additional options to apply to the BrowserWindow. |
 | enabled | Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`. |
 
+<a name="DevTools"></a>
+
+## DevTools
+Installs dev tools extensions and opens the devTools panel.
+
+**Kind**: global class  
+<a name="new_DevTools_new"></a>
+
+### new DevTools(devTools, enabled)
+
+| Param | Description |
+| --- | --- |
+| devTools | The extensions to install. Defaults to Vue3 dev tools. |
+| enabled | Indicates if the plugin is enabled. Used to disable the plugin when the app is packaged. Defaults to `!app.isPackaged`. |
+
 <a name="InitContext"></a>
 
 ## InitContext
 The context object passed to each plugin during the init process.
 
 **Kind**: global class  
-<a name="KioskBrowserWindow"></a>
-
-## KioskBrowserWindow
-Enables kiosk mode in the BrowserWindow when the application is packaged.
-
-**Kind**: global class  
-<a name="new_KioskBrowserWindow_new"></a>
-
-### new KioskBrowserWindow(options, enableKioskMode)
-
-| Param | Description |
-| --- | --- |
-| options | Additional options to apply to the BrowserWindow. |
-| enableKioskMode | Indicates if the plugin is enabled. Used to disabled kiosk mode in development. Defaults to `app.isPackaged` |
-
 <a name="NodeHeartbeat"></a>
 
 ## NodeHeartbeat
@@ -157,11 +175,12 @@ Starts a "heartbeat", which reports uptime to betteruptime.com.Requires that h
 **Kind**: global class  
 <a name="new_NodeHeartbeat_new"></a>
 
-### new NodeHeartbeat(enabled)
+### new NodeHeartbeat(enabled, options)
 
 | Param | Description |
 | --- | --- |
 | enabled | Indicates if the plugin is enabled. Used to disable the plugin during development. Defaults to `app.isPackaged`. |
+| options | Options passed to the node heartbeat instance. |
 
 <a name="PrivilegedSchemes"></a>
 

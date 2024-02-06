@@ -32,7 +32,8 @@ export class DevTools implements InitPlugin {
     }
 
     if (context.browserWindow) {
-      context.browserWindow.webContents.openDevTools();
+      const browserWindow = context.browserWindow;
+      browserWindow.on('ready-to-show', () => browserWindow.webContents.openDevTools());
     }
   }
 }
