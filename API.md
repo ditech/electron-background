@@ -27,9 +27,11 @@ over this plugin, but there are times when app cannot be in kiosk mode.</p>
 <dt><a href="#InitContext">InitContext</a></dt>
 <dd><p>The context object passed to each plugin during the init process.</p>
 </dd>
-<dt><a href="#NodeHeartbeat">NodeHeartbeat</a></dt>
-<dd><p>Starts a &quot;heartbeat&quot;, which reports uptime to betteruptime.com.</p>
-<p>Requires that heartbeatApiKey is set in the settings.</p>
+<dt><a href="#Heartbeat">Heartbeat</a></dt>
+<dd><p>Starts a &quot;heartbeat&quot;, which sends a request to the provided url on an interval.</p>
+</dd>
+<dt><a href="#BetterStackHeartbeat">BetterStackHeartbeat</a></dt>
+<dd><p>Starts a &quot;heartbeat&quot; by sending a request to <a href="https://betterstack.com">https://betterstack.com</a> on an interval. Requires the apiKey to be in the app config.</p>
 </dd>
 <dt><a href="#PrivilegedSchemes">PrivilegedSchemes</a></dt>
 <dd><p>Registers schemes as privileged.</p>
@@ -172,22 +174,35 @@ Installs dev tools extensions and opens the devTools panel.
 The context object passed to each plugin during the init process.
 
 **Kind**: global class  
-<a name="NodeHeartbeat"></a>
+<a name="Heartbeat"></a>
 
-## NodeHeartbeat
-Starts a "heartbeat", which reports uptime to betteruptime.com.
-
-Requires that heartbeatApiKey is set in the settings.
+## Heartbeat
+Starts a "heartbeat", which sends a request to the provided url on an interval.
 
 **Kind**: global class  
-<a name="new_NodeHeartbeat_new"></a>
+<a name="new_Heartbeat_new"></a>
 
-### new NodeHeartbeat(enabled, options)
+### new Heartbeat(options, enabled)
+
+| Param | Description |
+| --- | --- |
+| options | Options that define the url used to monitor the app. |
+| enabled | Indicates if the plugin is enabled. Used to disable the plugin during development. Defaults to `app.isPackaged`. |
+
+<a name="BetterStackHeartbeat"></a>
+
+## BetterStackHeartbeat
+Starts a "heartbeat" by sending a request to https://betterstack.com on an interval. Requires the apiKey to be in the app config.
+
+**Kind**: global class  
+<a name="new_BetterStackHeartbeat_new"></a>
+
+### new BetterStackHeartbeat(enabled, options)
 
 | Param | Description |
 | --- | --- |
 | enabled | Indicates if the plugin is enabled. Used to disable the plugin during development. Defaults to `app.isPackaged`. |
-| options | Options passed to the node heartbeat instance. |
+| options | Options that used to start the heartbeat. |
 
 <a name="PrivilegedSchemes"></a>
 
