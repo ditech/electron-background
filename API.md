@@ -91,7 +91,10 @@ Initializes the `@dimensional-innovations/electron-asset-loader` package.Note 
 <a name="AutoUpdater"></a>
 
 ## AutoUpdater
-Starts the auto update process, checking for updates every 3 minutesand automatically installing the update once one is found.For more info, see https://www.electron.build/auto-update
+Starts the auto update process, checking for updates every 3 minutes
+and automatically installing the update once one is found.
+
+For more info, see https://www.electron.build/auto-update
 
 **Kind**: global class  
 <a name="new_AutoUpdater_new"></a>
@@ -105,7 +108,8 @@ Starts the auto update process, checking for updates every 3 minutesand automat
 <a name="DefaultBrowserWindow"></a>
 
 ## DefaultBrowserWindow
-Applies default options to the browser window. If `appHeight`, `appWidth`, or `backgroundColor` are included inapp config, they will be added to the window options as well.
+Applies default options to the browser window. If `appHeight`, `appWidth`, or `backgroundColor` are included in
+app config, they will be added to the window options as well.
 
 **Kind**: global class  
 <a name="new_DefaultBrowserWindow_new"></a>
@@ -134,7 +138,8 @@ Enables kiosk mode in the BrowserWindow when the application is packaged.
 <a name="FullScreenBrowserWindow"></a>
 
 ## FullScreenBrowserWindow
-Ensures the browser window will always be fullscreen. Generally, KioskBrowserWindow is preferredover this plugin, but there are times when app cannot be in kiosk mode.
+Ensures the browser window will always be fullscreen. Generally, KioskBrowserWindow is preferred
+over this plugin, but there are times when app cannot be in kiosk mode.
 
 **Kind**: global class  
 <a name="new_FullScreenBrowserWindow_new"></a>
@@ -158,7 +163,7 @@ Installs dev tools extensions and opens the devTools panel.
 
 | Param | Description |
 | --- | --- |
-| devTools | The extensions to install. Defaults to Vue3 dev tools. |
+| devTools | The extensions to install. |
 | enabled | Indicates if the plugin is enabled. Used to disable the plugin when the app is packaged. Defaults to `!app.isPackaged`. |
 
 <a name="InitContext"></a>
@@ -170,7 +175,9 @@ The context object passed to each plugin during the init process.
 <a name="NodeHeartbeat"></a>
 
 ## NodeHeartbeat
-Starts a "heartbeat", which reports uptime to betteruptime.com.Requires that heartbeatApiKey is set in the settings.
+Starts a "heartbeat", which reports uptime to betteruptime.com.
+
+Requires that heartbeatApiKey is set in the settings.
 
 **Kind**: global class  
 <a name="new_NodeHeartbeat_new"></a>
@@ -199,7 +206,9 @@ Registers schemes as privileged.
 <a name="SingleInstance"></a>
 
 ## SingleInstance
-Enforces that only a single instance of the app can run at the same time.If a second instance of the is opened, the second instance is closed andthe first instance is brought back into focus.
+Enforces that only a single instance of the app can run at the same time.
+If a second instance of the is opened, the second instance is closed and
+the first instance is brought back into focus.
 
 **Kind**: global class  
 <a name="StaticFileDir"></a>
@@ -272,7 +281,10 @@ Initializes the application, creating a browser window, and loads the provided a
 <a name="createFileProtocol"></a>
 
 ## createFileProtocol(scheme, sourceDirectory)
-Wrapper around `protocol.registerFileProtocol` that serves files from the given source directory.The handler will convert any url with the custom scheme to a file path in the source directory inorder to find the file to serve. For example, with "media" passed in for scheme and `/public` passedin for sourceDirectory "media://videos/demo.mp4" would resolve to "/public/media/videos/demo.mp4".
+Wrapper around `protocol.registerFileProtocol` that serves files from the given source directory.
+The handler will convert any url with the custom scheme to a file path in the source directory in
+order to find the file to serve. For example, with "media" passed in for scheme and `/public` passed
+in for sourceDirectory "media://videos/demo.mp4" would resolve to "/public/media/videos/demo.mp4".
 
 **Kind**: global function  
 

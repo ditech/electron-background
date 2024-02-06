@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@babel/parser@^7.9.4":
-  version "7.19.4"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.19.4.tgz#03c4339d2b8971eb3beca5252bafd9b9f79db3dc"
-  integrity sha512-qpVT7gtuOLjWeDTKLkJ6sryqLliBaFpAtGeqw5cs5giLldvh+Ch0plqnUMKoVAUS6ZEueQQiZV+p5pxtPitEsA==
+"@babel/parser@^7.20.15":
+  version "7.23.9"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.23.9.tgz#7b903b6149b0f8fa7ad564af646c4c38a77fc44b"
+  integrity sha512-9tcKgqKbs3xGJ+NtKF2ndOBBLVwPjl1SHxPQkd36r3Dlirw3xWUeGaTbqr7uGZcTaxkVNwc+03SVP7aCdWrTlA==
 
 "@dimensional-innovations/node-heartbeat@^0.0.9":
   version "0.0.9"
@@ -85,6 +85,13 @@
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz#d9fae00a2d5cb40f92cfe64b47ad749fbc38f917"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
+
+"@jsdoc/salty@^0.2.1":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@jsdoc/salty/-/salty-0.2.7.tgz#98ddce519fd95d7bee605a658fabf6e8cbf7556d"
+  integrity sha512-mh8LbS9d4Jq84KLw8pzho7XC2q2/IJGiJss3xwRoLD1A+EE16SjN4PfaG4jRCzKegTFLlN0Zd8SdUPE6XdoPFg==
+  dependencies:
+    lodash "^4.17.21"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -733,17 +740,17 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-dmd@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/dmd/-/dmd-6.1.0.tgz#f8955ab250a381e0ea63dcbb404c4acdd7d6175d"
-  integrity sha512-0zQIJ873gay1scCTFZvHPWM9mVJBnaylB2NQDI8O9u8O32m00Jb6uxDKexZm8hjTRM7RiWe0FJ32pExHoXdwoQ==
+dmd@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/dmd/-/dmd-6.2.0.tgz#d267a9fb1ce62b74edca8bf5bcbd3b8e08574fe7"
+  integrity sha512-uXWxLF1H7TkUAuoHK59/h/ts5cKavm2LnhrIgJWisip4BVzPoXavlwyoprFFn2CzcahKYgvkfaebS6oxzgflkg==
   dependencies:
     array-back "^6.2.2"
     cache-point "^2.0.0"
     common-sequence "^2.0.2"
     file-set "^4.0.2"
     handlebars "^4.7.7"
-    marked "^4.0.12"
+    marked "^4.2.3"
     object-get "^2.1.1"
     reduce-flatten "^3.0.1"
     reduce-unique "^2.0.1"
@@ -1693,52 +1700,52 @@ js2xmlparser@^4.0.2:
   dependencies:
     xmlcreate "^2.0.4"
 
-jsdoc-api@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/jsdoc-api/-/jsdoc-api-7.1.1.tgz#a5e5a84d39330f4b3497e95ed29ae8e38118d665"
-  integrity sha512-0pkuPCzVXiqsDAsVrNFXCkHzlyNepBIDVtwwehry4RJAnZmXtlAz7rh8F9FRz53u3NeynGbex+bpYWwi8lE66A==
+jsdoc-api@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/jsdoc-api/-/jsdoc-api-8.0.0.tgz#4b2c25ff60f91b80da51b6cd33943acc7b2cab74"
+  integrity sha512-Rnhor0suB1Ds1abjmFkFfKeD+kSMRN9oHMTMZoJVUrmtCGDwXty+sWMA9sa4xbe4UyxuPjhC7tavZ40mDKK6QQ==
   dependencies:
     array-back "^6.2.2"
     cache-point "^2.0.0"
     collect-all "^1.0.4"
     file-set "^4.0.2"
     fs-then-native "^2.0.0"
-    jsdoc "^3.6.10"
+    jsdoc "^4.0.0"
     object-to-spawn-args "^2.0.1"
     temp-path "^1.0.0"
     walk-back "^5.1.0"
 
-jsdoc-parse@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/jsdoc-parse/-/jsdoc-parse-6.1.0.tgz#f236bc0a219c2c481294c9ecf340ca996f209bb4"
-  integrity sha512-n/hDGQJa69IBun1yZAjqzV4gVR41+flZ3bIlm9fKvNe2Xjsd1/+zCo2+R9ls8LxtePgIWbpA1jU7xkB2lRdLLg==
+jsdoc-parse@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/jsdoc-parse/-/jsdoc-parse-6.2.1.tgz#d67bb57816f741de8d0ec8ec197cc5fd8146165f"
+  integrity sha512-9viGRUUtWOk/G4V0+nQ6rfLucz5plxh5I74WbNSNm9h9NWugCDVX4jbG8hZP9QqKGpdTPDE+qJXzaYNos3wqTA==
   dependencies:
     array-back "^6.2.2"
     lodash.omit "^4.5.0"
-    lodash.pick "^4.4.0"
     reduce-extract "^1.0.0"
-    sort-array "^4.1.4"
+    sort-array "^4.1.5"
     test-value "^3.0.0"
 
-jsdoc-to-markdown@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/jsdoc-to-markdown/-/jsdoc-to-markdown-7.1.1.tgz#dde4ef32fd0b28b2695c919a08fd65ae98317bcd"
-  integrity sha512-CI86d63xAVNO+ENumWwmJ034lYe5iGU5GwjtTA11EuphP9tpnoi4hrKgR/J8uME0D+o4KUpVfwX1fjZhc8dEtg==
+jsdoc-to-markdown@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/jsdoc-to-markdown/-/jsdoc-to-markdown-8.0.1.tgz#e21aeb2a8d844ec7c31ee4fd8dc5dcf7ea5625fa"
+  integrity sha512-qJfNJhkq2C26UYoOdj8L1yheTJlk1veCsxwRejRmj07XZKCn7oSkuPErx6+JoNi8afCaUKdIM5oUu0uF2/T8iw==
   dependencies:
     array-back "^6.2.2"
     command-line-tool "^0.8.0"
     config-master "^3.1.0"
-    dmd "^6.1.0"
-    jsdoc-api "^7.1.1"
-    jsdoc-parse "^6.1.0"
+    dmd "^6.2.0"
+    jsdoc-api "^8.0.0"
+    jsdoc-parse "^6.2.1"
     walk-back "^5.1.0"
 
-jsdoc@^3.6.10:
-  version "3.6.11"
-  resolved "https://registry.yarnpkg.com/jsdoc/-/jsdoc-3.6.11.tgz#8bbb5747e6f579f141a5238cbad4e95e004458ce"
-  integrity sha512-8UCU0TYeIYD9KeLzEcAu2q8N/mx9O3phAGl32nmHlE0LpaJL71mMkP4d+QE5zWfNt50qheHtOZ0qoxVrsX5TUg==
+jsdoc@^4.0.0:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/jsdoc/-/jsdoc-4.0.2.tgz#a1273beba964cf433ddf7a70c23fd02c3c60296e"
+  integrity sha512-e8cIg2z62InH7azBBi3EsSEqrKx+nUtAS5bBcYTSpZFA+vhNPyhv8PTFZ0WsjOPDj04/dOLlm08EDcQJDqaGQg==
   dependencies:
-    "@babel/parser" "^7.9.4"
+    "@babel/parser" "^7.20.15"
+    "@jsdoc/salty" "^0.2.1"
     "@types/markdown-it" "^12.2.3"
     bluebird "^3.7.2"
     catharsis "^0.9.0"
@@ -1751,7 +1758,6 @@ jsdoc@^3.6.10:
     mkdirp "^1.0.4"
     requizzle "^0.2.3"
     strip-json-comments "^3.1.0"
-    taffydb "2.6.2"
     underscore "~1.13.2"
 
 json-buffer@3.0.0:
@@ -1885,12 +1891,7 @@ lodash.padend@^4.6.1:
   resolved "https://registry.yarnpkg.com/lodash.padend/-/lodash.padend-4.6.1.tgz#53ccba047d06e158d311f45da625f4e49e6f166e"
   integrity sha512-sOQs2aqGpbl27tmCS1QNZA09Uqp01ZzWfDUoD+xzTii0E7dSQfRKcRetFwa+uXaxaqL+TKm7CgD2JdKP7aZBSw==
 
-lodash.pick@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
-  integrity sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==
-
-lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15:
+lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -1928,10 +1929,15 @@ markdown-it@^12.3.2:
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
 
-marked@^4.0.10, marked@^4.0.12:
+marked@^4.0.10:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/marked/-/marked-4.1.1.tgz#2f709a4462abf65a283f2453dc1c42ab177d302e"
   integrity sha512-0cNMnTcUJPxbA6uWmCmjWz4NJRe/0Xfk2NhXCUHjew9qJzFN20krFnsUe7QynwqOwa5m1fZ4UDg0ycKFVC0ccw==
+
+marked@^4.2.3:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.3.0.tgz#796362821b019f734054582038b116481b456cf3"
+  integrity sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==
 
 matcher@^3.0.0:
   version "3.0.0"
@@ -2491,7 +2497,7 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
-sort-array@^4.1.4:
+sort-array@^4.1.5:
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/sort-array/-/sort-array-4.1.5.tgz#64b92aaba222aec606786f4df28ae4e3e3e68313"
   integrity sha512-Ya4peoS1fgFN42RN1REk2FgdNOeLIEMKFGJvs7VTP3OklF8+kl2SkpVliZ4tk/PurWsrWRsdNdU+tgyOBkB9sA==
@@ -2601,11 +2607,6 @@ table-layout@^0.4.2:
     lodash.padend "^4.6.1"
     typical "^2.6.1"
     wordwrapjs "^3.0.0"
-
-taffydb@2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/taffydb/-/taffydb-2.6.2.tgz#7cbcb64b5a141b6a2efc2c5d2c67b4e150b2a268"
-  integrity sha512-y3JaeRSplks6NYQuCOj3ZFMO3j60rTwbuKCvZxsAraGYH2epusatvZ0baZYA01WsGqJBq/Dl6vOrMUJqyMj8kA==
 
 temp-path@^1.0.0:
   version "1.0.0"
