@@ -1,13 +1,10 @@
-# @dimensional-innovations/vue-electron-background
+# @dimensional-innovations/electron-background
 
-vue-electron-background aims to simplify electron apps by providing a simple api to customize the electron application.
+electron-background aims to simplify electron apps by providing a simple api to customize the electron application.
 
-## Examples
+## Getting Started
 
 ### Install
-Make sure you have `@dimensional-innovations` private package repository access, more info here:
-https://gitlab.com/dimensional-innovations/di-handbook/-/blob/master/gitlab-packages/gitlab-packages-setup.md
-
 Add the package using npm or yarn:
 ```bash
 npm install @dimensional-innovations/electron-background
