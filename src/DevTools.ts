@@ -11,11 +11,11 @@ export class DevTools implements InitPlugin {
   /**
    * @constructor
    * 
-   * @param devTools - The extensions to install. Defaults to Vue3 dev tools.
+   * @param devTools - The extensions to install.
    * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin when the app is packaged. Defaults to `!app.isPackaged`.
    */
   constructor(
-    private readonly devTools: Array<Extension> = [VUEJS3_DEVTOOLS], 
+    private readonly devTools: Array<Extension>, 
     private readonly enabled: boolean = !app.isPackaged,
   ) { }
 
