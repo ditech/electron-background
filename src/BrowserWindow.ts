@@ -5,7 +5,7 @@ import { InitContext, InitPlugin } from "./init";
  * Applies default options to the browser window. If `appHeight`, `appWidth`, or `backgroundColor` are included in
  * app config, they will be added to the window options as well.
  */
-export class BrowserWindow implements InitPlugin {
+export class DefaultBrowserWindow implements InitPlugin {
 
   /**
    * @constructor
@@ -56,7 +56,7 @@ export class BrowserWindow implements InitPlugin {
 /**
  * Enables kiosk mode in the BrowserWindow when the application is packaged.
  */
-export class KioskBrowserWindow extends BrowserWindow {
+export class KioskBrowserWindow extends DefaultBrowserWindow {
 
   /**
    * @constructor
@@ -95,7 +95,7 @@ export class KioskBrowserWindow extends BrowserWindow {
  * Ensures the browser window will always be fullscreen. Generally, KioskBrowserWindow is preferred
  * over this plugin, but there are times when app cannot be in kiosk mode.
  */
-export class FullScreenBrowserWindow extends BrowserWindow {
+export class FullScreenBrowserWindow extends DefaultBrowserWindow {
 
   /**
    * @constructor
