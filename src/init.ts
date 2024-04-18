@@ -23,17 +23,29 @@ export class InitContext {
     public browserWindowOptions: BrowserWindowConstructorOptions,
 
     /**
-     * The main browser window that the app is loaded into. This is available in the context
-     * in the `afterLoad` method.
-     */
-    public browserWindow: BrowserWindow | null,
-
-    /**
      * The log instance. This should be used over `console` in plugin implementations.
      */
     public log: Pick<Console, 'error' | 'warn' | 'info' | 'debug'>,
   ) { }
+
+  /**
+     * The main browser window that the app is loaded into. This is available in the context
+     * in the `beforeLoad` and `afterLoad` method.
+     */
+  public browserWindow?: BrowserWindow;
 }
+
+/**
+ * Represents the InitContext before the BrowserWindow has been set. Used in the
+ * "beforeReady" and "afterReady" methods.
+ */
+export type NonBrowserWindowInitContext = Omit<InitContext, 'browserWindow'>;
+
+/**
+ * Represents the InitContext after the BrowserWindow has been set. Used in the 
+ * "beforeLoad" and "afterLoad" methods.
+ */
+export type BrowserWindowInitContext = Omit<InitContext, 'browserWindow'> & Required<Pick<InitContext, 'browserWindow'>>;
 
 /**
  * A plugin is used to execute logic at various stages during the init process.
@@ -47,7 +59,7 @@ export interface InitPlugin {
    *
    * @param context - The current InitContext instance.
    */
-  beforeReady?(context: InitContext): Promise<void>;
+  beforeReady?(context: NonBrowserWindowInitContext): Promise<void>;
 
   /**
    * afterReady is executed after the `app.whenReady()` promise resolves, but before the
@@ -55,7 +67,7 @@ export interface InitPlugin {
    *
    * @param context - The current InitContext instance.
    */
-  afterReady?(context: InitContext): Promise<void>;
+  afterReady?(context: NonBrowserWindowInitContext): Promise<void>;
 
   /**
    * beforeLoad is executed after the browserWindow is created, but before the application
@@ -63,14 +75,14 @@ export interface InitPlugin {
    *
    * @param context - The current InitContext instance.
    */
-  beforeLoad?(context: InitContext): Promise<void>;
+  beforeLoad?(context: BrowserWindowInitContext): Promise<void>;
 
   /**
    * afterLoad is executed after the application has been loaded into the browserWindow.
    *
    * @param context - The current InitContext instance.
    */
-  afterLoad?(context: InitContext): Promise<void>;
+  afterLoad?(context: BrowserWindowInitContext): Promise<void>;
 }
 
 export interface InitOptions {
@@ -78,6 +90,11 @@ export interface InitOptions {
    * The url to load once the the app has been created.
    */
   appUrl: string;
+
+  /**
+   * The default browser window options
+   */
+  browserWindowOptions?: BrowserWindowConstructorOptions;
 
   /**
    * The default application settings.
@@ -98,6 +115,7 @@ export interface InitOptions {
  */
 export async function init({
   appUrl,
+  browserWindowOptions = { height: 1920, width: 1080, backgroundColor: '#000' },
   config = {},
   plugins = [],
 }: InitOptions): Promise<InitContext> {
@@ -108,7 +126,7 @@ export async function init({
   });
   process.on('SIGTERM', app.quit);
 
-  const context = new InitContext(appUrl, config, { height: 1920, width: 1080, backgroundColor: '#000' }, null, log);
+  const context = new InitContext(appUrl, config, browserWindowOptions, log);
 
   for (const plugin of plugins) {
     if (plugin.beforeReady) {
@@ -125,11 +143,10 @@ export async function init({
   }
 
   context.browserWindow = new BrowserWindow(context.browserWindowOptions);
-  context.browserWindow.on('closed', () => context.browserWindow = null);
 
   for (const plugin of plugins) {
     if (plugin.beforeLoad) {
-      await plugin.beforeLoad(context);
+      await plugin.beforeLoad(context as BrowserWindowInitContext);
     }
   }
 
@@ -137,9 +154,11 @@ export async function init({
 
   for (const plugin of plugins) {
     if (plugin.afterLoad) {
-      plugin.afterLoad(context);
+      await plugin.afterLoad(context as BrowserWindowInitContext);
     }
   }
+
+  context.browserWindow.on('closed', () => context.browserWindow = undefined);
 
   return context;
 }

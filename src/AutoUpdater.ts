@@ -1,7 +1,7 @@
-import { autoUpdater } from 'electron-updater';
-import electronLog from 'electron-log';
 import { app } from 'electron';
-import { InitContext, InitPlugin } from './init';
+import electronLog from 'electron-log';
+import { autoUpdater } from 'electron-updater';
+import { BrowserWindowInitContext, InitPlugin } from './init';
 
 /**
  * Starts the auto update process, checking for updates every 3 minutes
@@ -17,12 +17,12 @@ export class AutoUpdater implements InitPlugin {
    */
   constructor(private readonly enabled: boolean = app.isPackaged) { }
 
-  public async afterLoad(context: InitContext): Promise<void> {
-    const { autoUpdaterChannel } = context.config;
+  public async afterLoad({ config, log }: BrowserWindowInitContext): Promise<void> {
+    const { autoUpdaterChannel } = config;
     if (this.enabled && autoUpdaterChannel) {
       this.startAutoUpdater(autoUpdaterChannel as string);
     } else if (this.enabled) {
-      context.log.warn('autoUpdaterChannel was not set in the settings. AutoUpdater was not started.');
+      log.warn('autoUpdaterChannel was not set in the settings. AutoUpdater was not started.');
     }
   }
 

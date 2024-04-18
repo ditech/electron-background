@@ -1,5 +1,5 @@
 import { BrowserWindowConstructorOptions, app } from "electron";
-import { InitContext, InitPlugin } from "./init";
+import { BrowserWindowInitContext, InitContext, InitPlugin } from "./init";
 
 /**
  * Applies default options to the browser window. If `appHeight`, `appWidth`, or `backgroundColor` are included in
@@ -110,14 +110,8 @@ export class FullScreenBrowserWindow extends DefaultBrowserWindow {
     super(options);
   }
 
-  public async beforeLoad(context: InitContext): Promise<void> {
+  public async beforeLoad({ browserWindow }: BrowserWindowInitContext): Promise<void> {
     if (!this.enabled) {
-      return;
-    }
-
-    const browserWindow = context.browserWindow;
-    if (!browserWindow) {
-      context.log.error('browserWindow is undefined');
       return;
     }
 
