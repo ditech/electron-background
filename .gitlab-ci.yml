@@ -10,6 +10,8 @@ cache:
 
 build:
   stage: build
+  before_script:
+    - yarn install --frozen-lockfile
   script:
     - yarn build
 
@@ -38,6 +40,8 @@ release_npm_publish:
     - tags
   variables:
     NPM_TOKEN: $NPM_TOKEN
+  before_script:
+    - yarn install --frozen-lockfile
   script:
     - |
       {
@@ -52,6 +56,8 @@ release_gitlab_publish:
   stage: release
   only:
     - tags
+  before_script:
+    - yarn install --frozen-lockfile
   script:
     - |
       {
