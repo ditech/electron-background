@@ -11,7 +11,8 @@
     "build": "tsc",
     "lint": "eslint ./src/**/*",
     "lint:fix": "eslint ./src/**/* --fix",
-    "generate:docs": "jsdoc2md ./dist/* > API.md"
+    "generate:docs": "jsdoc2md ./dist/* > API.md",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",

@@ -12,9 +12,6 @@ build:
   stage: build
   script:
     - yarn build
-  artifacts:
-    paths:
-      - dist/**/*
 
 build_lint:
   stage: build
