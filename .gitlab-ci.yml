@@ -17,6 +17,8 @@ build:
 
 build_lint:
   stage: build
+  before_script:
+    - yarn install --frozen-lockfile
   script:
     - yarn lint
 
