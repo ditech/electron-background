@@ -33,9 +33,11 @@
     "axios": "^1.6.7",
     "electron-devtools-installer": "^4.0.0",
     "electron-log": "^5.1.1",
-    "electron-updater": "^6.1.7"
+    "electron-updater": "^6.1.7",
+    "lodash.merge": "^4.6.2"
   },
   "devDependencies": {
+    "@types/lodash.merge": "^4.6.9",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "electron": "^28.2.1",

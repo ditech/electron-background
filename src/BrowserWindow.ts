@@ -1,5 +1,6 @@
 import { BrowserWindowConstructorOptions, app } from "electron";
 import { BrowserWindowInitContext, InitContext, InitPlugin } from "./init";
+import merge from 'lodash.merge';
 
 /**
  * Applies default options to the browser window. If `appHeight`, `appWidth`, or `backgroundColor` are included in
@@ -17,13 +18,7 @@ export class DefaultBrowserWindow implements InitPlugin {
   ) { }
 
   public async afterReady(context: InitContext): Promise<void> {
-    context.browserWindowOptions = {
-      ...context.browserWindowOptions,
-      ...this.getDefaultWindowOptions(),
-      ...this.getWindowOptionsFromConfig(context.config),
-      ...this.options,
-      closable: true
-    };
+    context.browserWindowOptions = merge({}, this.getDefaultWindowOptions(), this.getWindowOptionsFromConfig(context.config), context.browserWindowOptions, this.options, { closable: true });
   }
 
   protected getDefaultWindowOptions(): BrowserWindowConstructorOptions {
