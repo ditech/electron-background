@@ -12,11 +12,6 @@ export class InitContext {
     public appUrl: string,
 
     /**
-     * Application config used by the app and/or plugins.
-     */
-    public config: Record<string, string | number | boolean>,
-
-    /**
      * Options used to create the BrowserWindow. These can be modified in `beforeReady` or
      * `beforeLoad` methods to change the created BrowserWindow.
      */
@@ -97,11 +92,6 @@ export interface InitOptions {
   browserWindowOptions?: BrowserWindowConstructorOptions;
 
   /**
-   * The default application settings.
-   */
-  config?: Record<string, string | number | boolean>;
-
-  /**
    * The list of plugins to load with the application.
    */
   plugins?: Array<InitPlugin>;
@@ -116,7 +106,6 @@ export interface InitOptions {
 export async function init({
   appUrl,
   browserWindowOptions = { height: 1920, width: 1080, backgroundColor: '#000' },
-  config = {},
   plugins = [],
 }: InitOptions): Promise<InitContext> {
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
@@ -126,7 +115,7 @@ export async function init({
   });
   process.on('SIGTERM', app.quit);
 
-  const context = new InitContext(appUrl, config, browserWindowOptions, log);
+  const context = new InitContext(appUrl, browserWindowOptions, log);
 
   for (const plugin of plugins) {
     if (plugin.beforeReady) {
