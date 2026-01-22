@@ -37,7 +37,6 @@ The core of this library is the `init()` function (src/init.ts), which orchestra
 
 Throughout the plugin lifecycle, plugins receive an `InitContext` object containing:
 - `appUrl` - The URL to load in the window
-- `config` - Application configuration object (key-value pairs)
 - `browserWindowOptions` - BrowserWindow options that can be modified by plugins
 - `log` - electron-log instance for consistent logging
 - `browserWindow` - Available in beforeLoad/afterLoad phases only
@@ -59,7 +58,7 @@ All plugins implement the `InitPlugin` interface (src/init.ts:56-86). Common pat
 The BrowserWindow plugins (DefaultBrowserWindow, KioskBrowserWindow, FullScreenBrowserWindow in src/BrowserWindow.ts) use a specific merge order via `lodash.merge`:
 
 ```
-defaultOptions → configOptions → contextOptions → pluginOptions → { closable: true }
+defaultOptions → contextOptions → pluginOptions → { closable: true }
 ```
 
 This ensures the rightmost values take precedence, with `closable: true` always winning.
@@ -68,14 +67,14 @@ This ensures the rightmost values take precedence, with `closable: true` always 
 
 ### Built-in Plugins (src/):
 
-- **AutoUpdater** - Checks for updates every 3 minutes using electron-updater. Requires `autoUpdaterChannel` in config. Enabled when packaged
+- **AutoUpdater** - Checks for updates every 3 minutes using electron-updater. Requires `channel` in options. Enabled when packaged
 - **DevTools** - Installs browser extensions and opens DevTools. Accepts array of extensions to install. Enabled in development only
 - **DefaultBrowserWindow/KioskBrowserWindow/FullScreenBrowserWindow** - Configure window behavior. Kiosk mode enables fullscreen, always-on-top, and disables window controls
 - **PrivilegedSchemes** - Registers custom URL schemes as privileged (must run in beforeReady)
 - **StaticFileDir** - Registers custom scheme to serve static files from a directory
 - **TouchEvents** - Enables touch input support
 - **SingleInstance** - Ensures only one app instance runs; focuses existing window if second instance launches
-- **NodeHeartbeat** - Sends periodic heartbeat to betteruptime.com (requires `heartbeatApiKey` in config)
+- **NodeHeartbeat** - Sends periodic heartbeat to betteruptime.com (requires `heartbeatApiKey` in options)
 
 ## Key Implementation Details
 
@@ -103,11 +102,10 @@ import { init, KioskBrowserWindow, AutoUpdater, DevTools } from '@dimensional-in
 
 init({
   appUrl: process.env.DEV_URL || 'app://index.html',
-  config: { autoUpdaterChannel: 'stable' },
   browserWindowOptions: { width: 1920, height: 1080 },
   plugins: [
     new KioskBrowserWindow(),
-    new AutoUpdater(),
+    new AutoUpdater({ channel: 'stable' }),
     new DevTools([DevToolExtensions.VUEJS_DEVTOOLS]),
   ]
 });

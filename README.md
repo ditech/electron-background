@@ -18,21 +18,17 @@ yarn add @dimensional-innovations/electron-background
 
 If you are using the Vue CLI, add the following to your main or background file. 
 ```typescript
-import { AutoUpdater, DevTools, VueElectronSettings, init, KioskBrowserWindow, PrivilegedSchemes, StaticFileDir, TouchEvents, VueElectronVersion } from '@dimensional-innovations/electron-background';
-import { config } from '../package';
+import { AutoUpdater, DevTools, init, KioskBrowserWindow, PrivilegedSchemes, StaticFileDir, TouchEvents } from '@dimensional-innovations/electron-background';
 
 init({
   appUrl: process.env.WEBPACK_DEV_URL ? process.env.WEBPACK_DEV_URL : 'app://index.html',
-  config,
   plugins: [
-    new AutoUpdater(),
+    new AutoUpdater({ channel: 'stable' }),
     new DevTools(),
     new KioskBrowserWindow(),
     new PrivilegedSchemes(['app']),
     new StaticFileDir('app', __dirname),
     new TouchEvents(),
-    new VueElectronSettings(),
-    new VueElectronVersion()
   ]
 });
 ```
@@ -41,22 +37,18 @@ init({
 
 If you are using Vite, add the following to your main or background file. 
 ```typescript
-import { AutoUpdater, DevTools, VueElectronSettings, init, KioskBrowserWindow, PrivilegedSchemes, TouchEvents, VueElectronVersion } from '@dimensional-innovations/electron-background';
-import { app } from 'electron';
-import { config } from '../package';
+import { AutoUpdater, DevTools, init, KioskBrowserWindow, TouchEvents } from '@dimensional-innovations/electron-background';
+import { join } from 'path';
 
 init({
   appUrl: process.env['ELECTRON_RENDERER_URL']
     ? process.env['ELECTRON_RENDERER_URL']
     : `file://${join(__dirname, '../renderer/index.html')}`,
-  config,
   plugins: [
-    new AutoUpdater(),
+    new AutoUpdater({ channel: 'stable' }),
     new DevTools(),
     new KioskBrowserWindow(),
     new TouchEvents(),
-    new VueElectronSettings(),
-    new VueElectronVersion()
   ]
 });
 ```
@@ -67,13 +59,11 @@ By default, the init method creates a BrowserWindow and loads the specified appl
 
 If a feature you need isn't listed below, you can still add it to the init script by defining the plugin in your application. For example, if we wanted to customize the autoplay policy flag in electron, we would add the following to our init method.
 ```typescript
-import { init } from '@dimensional-innovations/vue-electron-background';
+import { init } from '@dimensional-innovations/electron-background';
 import { app } from 'electron';
-import { config } from '../package';
 
 init({
   appUrl: ...,
-  config,
   plugins: [
     ...,
     { beforeReady: () => app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required') }
@@ -93,8 +83,8 @@ Installs dev tools extensions and opens the devTools panel.
 ### KioskBrowserWindow
 Enables kiosk mode in the BrowserWindow when the application is packaged.
 
-### BetterUptimeHeartbeat
-Starts a heartbeat, which reports uptime to betteruptime.com. Requires that "heartbeatApiKey" is set in the settings.
+### BetterStackHeartbeat
+Starts a heartbeat, which reports uptime to betteruptime.com. Requires `heartbeatApiKey` in options.
 
 ### PrivilegedSchemes
 Registers schemes as privileged.
