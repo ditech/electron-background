@@ -4,6 +4,17 @@ import { autoUpdater } from 'electron-updater';
 import { BrowserWindowInitContext, InitPlugin } from './init';
 
 /**
+ * Options for configuring the AutoUpdater plugin.
+ */
+export interface AutoUpdaterOptions {
+  /**
+   * The update channel to use (e.g., 'stable', 'beta', 'alpha').
+   * This determines which release channel the app will receive updates from.
+   */
+  channel?: string;
+}
+
+/**
  * Starts the auto update process, checking for updates every 3 minutes
  * and automatically installing the update once one is found.
  *
@@ -15,14 +26,17 @@ export class AutoUpdater implements InitPlugin {
    * 
    * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`.
    */
-  constructor(private readonly enabled: boolean = app.isPackaged) { }
+   constructor(
+     private readonly enabled: boolean = app.isPackaged,
+     private readonly options: AutoUpdaterOptions = {},
+   ) { }
 
-  public async afterLoad({ config, log }: BrowserWindowInitContext): Promise<void> {
-    const { autoUpdaterChannel } = config;
-    if (this.enabled && autoUpdaterChannel) {
-      this.startAutoUpdater(autoUpdaterChannel as string);
+  public async afterLoad({ log }: BrowserWindowInitContext): Promise<void> {
+    const { channel } = this.options;
+    if (this.enabled && channel) {
+      this.startAutoUpdater(channel);
     } else if (this.enabled) {
-      log.warn('autoUpdaterChannel was not set in the settings. AutoUpdater was not started.');
+      log.warn('channel was not set in the passed in options. AutoUpdater was not started.');
     }
   }
 
