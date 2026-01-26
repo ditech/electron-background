@@ -78,7 +78,7 @@ export class BetterStackHeartbeat implements InitPlugin {
   ) { }
 
   public async afterLoad(context: InitContext): Promise<void> {
-    const heartbeatApiKey = context.config.heartbeatApiKey || this.options.heartbeatApiKey;
+    const heartbeatApiKey = this.options.heartbeatApiKey;
 
     if (this.enabled && heartbeatApiKey && typeof heartbeatApiKey === 'string') {
       const url = this.options.isBetterStack

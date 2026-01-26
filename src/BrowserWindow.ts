@@ -18,7 +18,7 @@ export class DefaultBrowserWindow implements InitPlugin {
   ) { }
 
   public async afterReady(context: InitContext): Promise<void> {
-    context.browserWindowOptions = merge({}, this.getDefaultWindowOptions(), this.getWindowOptionsFromConfig(context.config), context.browserWindowOptions, this.options, { closable: true });
+    context.browserWindowOptions = merge({}, this.getDefaultWindowOptions(), context.browserWindowOptions, this.options, { closable: true });
   }
 
   protected getDefaultWindowOptions(): BrowserWindowConstructorOptions {
@@ -29,22 +29,6 @@ export class DefaultBrowserWindow implements InitPlugin {
         webSecurity: false
       }
     }
-  }
-
-  protected getWindowOptionsFromConfig({ appHeight, appWidth, backgroundColor }: Record<string, string | number | boolean>): BrowserWindowConstructorOptions {
-    const options: BrowserWindowConstructorOptions = {};
-
-    if (appHeight !== undefined && typeof appHeight === 'number') {
-      options.height = appHeight;
-    }
-    if (appWidth !== undefined && typeof appWidth === 'number') {
-      options.width = appWidth;
-    }
-    if (backgroundColor !== undefined && typeof backgroundColor === 'string') {
-      options.backgroundColor = backgroundColor;
-    }
-
-    return options;
   }
 }
 
