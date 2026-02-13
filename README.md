@@ -72,6 +72,20 @@ init({
 });
 ```
 
+### AutoStart
+Registers the application as a login item so it launches automatically at system startup. On Windows, boot-initiated launches are detected via a `--autostart` argument, allowing an optional delay before window creation. On macOS/Linux the delay is skipped since boot detection is not reliable.
+
+```typescript
+// Default: 30-second delay on boot launches
+new AutoStart()
+
+// Custom delay (in seconds)
+new AutoStart(true, { startupDelay: 60 })
+
+// No delay on boot launches
+new AutoStart(true, { startupDelay: 0 })
+```
+
 ### AutoUpdater
 Starts the auto update process, checking for updates every 3 minutes and automatically installing the update once one is found.
 

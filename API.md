@@ -1,9 +1,12 @@
 ## Classes
 
 <dl>
-<dt><a href="#AssetLoader">AssetLoader</a></dt>
-<dd><p>Initializes the <code>@dimensional-innovations/electron-asset-loader</code> package.</p>
-<p>Note that if this plugin is included, the package must be installed in the application as well.</p>
+<dt><a href="#AutoStart">AutoStart</a></dt>
+<dd><p>Registers the application as a login item for automatic startup and optionally
+delays window creation. The delay only applies when the app was auto-started at
+system boot (detected via the <code>--autostart</code> process argument on Windows).</p>
+<p>On macOS/Linux, boot detection is not reliably possible, so the delay is always
+skipped — the app launches instantly regardless of how it was started.</p>
 </dd>
 <dt><a href="#AutoUpdater">AutoUpdater</a></dt>
 <dd><p>Starts the auto update process, checking for updates every 3 minutes
@@ -47,18 +50,13 @@ the first instance is brought back into focus.</p>
 <dt><a href="#TouchEvents">TouchEvents</a></dt>
 <dd><p>Enables touch events in the app.</p>
 </dd>
-<dt><a href="#VueElectronSettings">VueElectronSettings</a></dt>
-<dd><p>Initializes the <code>@dimensional-innovations/vue-electron-settings</code> package, and updates the
-settings on the InitContext to match.</p>
-<p>Note that if this plugin is included, the package must be installed in the application as well.</p>
-</dd>
-<dt><a href="#VueElectronVersion">VueElectronVersion</a></dt>
-<dd><p>Initializes the <code>@dimensional-innovations/vue-electron-version</code> package.</p>
-<p>If this plugin is included, the package must also be installed in the app.</p>
-</dd>
-<dt><a href="#VueLogger">VueLogger</a></dt>
-<dd><p>Initializes the <code>@dimensional-innovations/vue-logger</code> package.</p>
-<p>If this plugin is included, the package must also be installed in the app.</p>
+</dl>
+
+## Constants
+
+<dl>
+<dt><a href="#AUTOSTART_ARG">AUTOSTART_ARG</a></dt>
+<dd><p>Argument passed to the login item so boot launches can be detected.</p>
 </dd>
 </dl>
 
@@ -76,20 +74,37 @@ in for sourceDirectory &quot;media://videos/demo.mp4&quot; would resolve to &quo
 </dd>
 </dl>
 
-<a name="AssetLoader"></a>
+<a name="AutoStart"></a>
 
-## AssetLoader
-Initializes the `@dimensional-innovations/electron-asset-loader` package.Note that if this plugin is included, the package must be installed in the application as well.
+## AutoStart
+Registers the application as a login item for automatic startup and optionally
+delays window creation. The delay only applies when the app was auto-started at
+system boot (detected via the `--autostart` process argument on Windows).
+
+On macOS/Linux, boot detection is not reliably possible, so the delay is always
+skipped — the app launches instantly regardless of how it was started.
 
 **Kind**: global class  
-<a name="new_AssetLoader_new"></a>
 
-### new AssetLoader(options)
+* [AutoStart](#AutoStart)
+    * [new AutoStart(enabled, options)](#new_AutoStart_new)
+    * [.isAutoStartLaunch()](#AutoStart+isAutoStartLaunch)
+
+<a name="new_AutoStart_new"></a>
+
+### new AutoStart(enabled, options)
 
 | Param | Description |
 | --- | --- |
-| options | Options used to initialize the asset loader. |
+| enabled | Whether auto-start is active. Defaults to `app.isPackaged`. |
+| options | Configuration options for startup behavior. |
 
+<a name="AutoStart+isAutoStartLaunch"></a>
+
+### autoStart.isAutoStartLaunch()
+Returns true when the app was launched by the OS login item (Windows only).
+
+**Kind**: instance method of [<code>AutoStart</code>](#AutoStart)  
 <a name="AutoUpdater"></a>
 
 ## AutoUpdater
@@ -247,40 +262,12 @@ Registers a custom scheme to serve static files.
 Enables touch events in the app.
 
 **Kind**: global class  
-<a name="VueElectronSettings"></a>
+<a name="AUTOSTART_ARG"></a>
 
-## VueElectronSettings
-Initializes the `@dimensional-innovations/vue-electron-settings` package, and updates thesettings on the InitContext to match.Note that if this plugin is included, the package must be installed in the application as well.
+## AUTOSTART\_ARG
+Argument passed to the login item so boot launches can be detected.
 
-**Kind**: global class  
-<a name="VueElectronVersion"></a>
-
-## VueElectronVersion
-Initializes the `@dimensional-innovations/vue-electron-version` package.If this plugin is included, the package must also be installed in the app.
-
-**Kind**: global class  
-<a name="new_VueElectronVersion_new"></a>
-
-### new VueElectronVersion(version)
-
-| Param | Description |
-| --- | --- |
-| version | The application version. Defaults to `app.getVersion()`. |
-
-<a name="VueLogger"></a>
-
-## VueLogger
-Initializes the `@dimensional-innovations/vue-logger` package.If this plugin is included, the package must also be installed in the app.
-
-**Kind**: global class  
-<a name="new_VueLogger_new"></a>
-
-### new VueLogger(transports)
-
-| Param | Description |
-| --- | --- |
-| transports | The transports to register. |
-
+**Kind**: global constant  
 <a name="init"></a>
 
 ## init(options) ⇒
