@@ -67,7 +67,7 @@ This ensures the rightmost values take precedence, with `closable: true` always 
 
 ### Built-in Plugins (src/):
 
-- **AutoStart** - Registers the app as a login item for automatic startup and optionally delays window creation on boot launches (Windows only). Accepts `startupDelay` in options. Enabled when packaged
+- **AutoStart** - Registers the app as a login item (in `afterLoad`) for automatic startup and optionally delays initialization on boot launches (in `beforeReady`, Windows only). Accepts `startupDelay` in options. Enabled when packaged
 - **AutoUpdater** - Checks for updates every 3 minutes using electron-updater. Requires `channel` in options. Enabled when packaged
 - **DevTools** - Installs browser extensions and opens DevTools. Accepts array of extensions to install. Enabled in development only
 - **DefaultBrowserWindow/KioskBrowserWindow/FullScreenBrowserWindow** - Configure window behavior. Kiosk mode enables fullscreen, always-on-top, and disables window controls

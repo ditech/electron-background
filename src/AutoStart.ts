@@ -1,19 +1,19 @@
 import { app } from 'electron';
 
-import { InitPlugin, NonBrowserWindowInitContext } from './init';
+import { BrowserWindowInitContext, InitPlugin, NonBrowserWindowInitContext } from './init';
 
 /** Argument passed to the login item so boot launches can be detected. */
 const AUTOSTART_ARG = '--autostart';
 
 export interface AutoStartOptions {
-  /** Delay in seconds before window creation on boot launches (0 = no delay). Default: 30 */
+  /** Delay in seconds before initialization on boot launches (0 = no delay). Default: 30 */
   startupDelay?: number;
 }
 
 /**
  * Registers the application as a login item for automatic startup and optionally
- * delays window creation. The delay only applies when the app was auto-started at
- * system boot (detected via the `--autostart` process argument on Windows).
+ * delays initialization on boot. The delay only applies when the app was auto-started
+ * at system boot (detected via the `--autostart` process argument on Windows).
  *
  * On macOS/Linux, boot detection is not reliably possible, so the delay is always
  * skipped — the app launches instantly regardless of how it was started.
@@ -36,14 +36,25 @@ export class AutoStart implements InitPlugin {
     return process.platform === 'win32' && process.argv.includes(AUTOSTART_ARG);
   }
 
-  async afterReady(context: NonBrowserWindowInitContext): Promise<void> {
+  async beforeReady(context: NonBrowserWindowInitContext): Promise<void> {
+    if (!this.enabled) return;
+
+    if (this.startupDelay > 0 && this.isAutoStartLaunch()) {
+      context.log.info(
+        `[AutoStart] Boot launch detected — delaying ${this.startupDelay}s before initialization`
+      );
+      await new Promise(resolve => setTimeout(resolve, this.startupDelay * 1000));
+    } else if (this.startupDelay > 0) {
+      context.log.info('[AutoStart] Manual launch — skipping startup delay');
+    }
+  }
+
+  async afterLoad(context: BrowserWindowInitContext): Promise<void> {
     if (!this.enabled) {
       context.log.info('[AutoStart] Disabled (not packaged)');
       return;
     }
 
-    // On Windows, include the autostart arg so boot launches can be distinguished
-    // from manual launches. On other platforms, no args needed.
     try {
       if (process.platform === 'win32') {
         app.setLoginItemSettings({ openAtLogin: true, args: [AUTOSTART_ARG] });
@@ -53,17 +64,6 @@ export class AutoStart implements InitPlugin {
       context.log.info('[AutoStart] Registered as login item');
     } catch (err) {
       context.log.error('[AutoStart] Failed to register login item:', err);
-    }
-
-    if (this.startupDelay > 0 && this.isAutoStartLaunch()) {
-      context.log.info(
-        `[AutoStart] Boot launch detected — delaying ${this.startupDelay}s before window creation`
-      );
-      await new Promise(resolve => {
-        setTimeout(resolve, this.startupDelay * 1000);
-      });
-    } else if (this.startupDelay > 0) {
-      context.log.info('[AutoStart] Manual launch — skipping startup delay');
     }
   }
 }
