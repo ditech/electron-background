@@ -1,6 +1,6 @@
 {
   "name": "@dimensional-innovations/electron-background",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "the background script for electron apps",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
