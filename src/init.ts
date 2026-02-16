@@ -97,6 +97,28 @@ export interface InitOptions {
   plugins?: Array<InitPlugin>;
 }
 
+function getPluginName(plugin: InitPlugin): string {
+  return plugin.constructor?.name || 'UnknownPlugin';
+}
+
+async function runPluginPhase<T>(
+  plugins: Array<InitPlugin>,
+  phase: keyof InitPlugin,
+  context: T,
+  logger: Pick<Console, 'error' | 'warn' | 'info' | 'debug'>,
+): Promise<void> {
+  for (const plugin of plugins) {
+    const method = plugin[phase];
+    if (method) {
+      try {
+        await (method as (ctx: T) => Promise<void>).call(plugin, context);
+      } catch (err) {
+        logger.error(`[init] Plugin "${getPluginName(plugin)}" threw during ${phase}:`, err);
+      }
+    }
+  }
+}
+
 /**
  * Initializes the application, creating a browser window, and loads the provided app url.
  *
@@ -117,35 +139,27 @@ export async function init({
 
   const context = new InitContext(appUrl, browserWindowOptions, log);
 
-  for (const plugin of plugins) {
-    if (plugin.beforeReady) {
-      await plugin.beforeReady(context);
-    }
-  }
+  await runPluginPhase(plugins, 'beforeReady', context, log);
 
   await app.whenReady();
 
-  for (const plugin of plugins) {
-    if (plugin.afterReady) {
-      await plugin.afterReady(context);
-    }
-  }
+  await runPluginPhase(plugins, 'afterReady', context, log);
 
   context.browserWindow = new BrowserWindow(context.browserWindowOptions);
 
-  for (const plugin of plugins) {
-    if (plugin.beforeLoad) {
-      await plugin.beforeLoad(context as BrowserWindowInitContext);
-    }
+  await runPluginPhase(plugins, 'beforeLoad', context as BrowserWindowInitContext, log);
+
+  try {
+    await context.browserWindow.loadURL(context.appUrl);
+  } catch (err) {
+    log.error('[init] Failed to load app URL:', err);
   }
 
-  await context.browserWindow.loadURL(context.appUrl);
-
-  for (const plugin of plugins) {
-    if (plugin.afterLoad) {
-      await plugin.afterLoad(context as BrowserWindowInitContext);
-    }
+  if (context.browserWindow && !context.browserWindow.isDestroyed() && !context.browserWindow.isVisible()) {
+    context.browserWindow.show();
   }
+
+  await runPluginPhase(plugins, 'afterLoad', context as BrowserWindowInitContext, log);
 
   context.browserWindow.on('closed', () => context.browserWindow = undefined);
 
