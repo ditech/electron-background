@@ -1,6 +1,6 @@
 import { app } from 'electron';
 
-import { BrowserWindowInitContext, InitPlugin } from './init';
+import { BrowserWindowInitContext, NonBrowserWindowInitContext, InitPlugin } from './init';
 
 /** Argument passed to the login item so boot launches can be detected. */
 const AUTOSTART_ARG = '--autostart';
@@ -12,10 +12,10 @@ export interface AutoStartOptions {
 
 /**
  * Registers the application as a login item for automatic startup and optionally
- * delays content loading on boot. The delay runs in `beforeLoad` — the window is
- * already created and visible (black background) while waiting, so it only applies
- * when the app was auto-started at system boot (detected via the `--autostart`
- * process argument on Windows).
+ * delays window creation on boot. The delay runs in `afterReady` — before the
+ * BrowserWindow is created — giving the GPU and display time to initialize after
+ * a system reboot. The delay only applies when the app was auto-started at system
+ * boot (detected via the `--autostart` process argument on Windows).
  *
  * On macOS/Linux, boot detection is not reliably possible, so the delay is always
  * skipped — the app launches instantly regardless of how it was started.
@@ -38,12 +38,12 @@ export class AutoStart implements InitPlugin {
     return process.platform === 'win32' && process.argv.includes(AUTOSTART_ARG);
   }
 
-  async beforeLoad(context: BrowserWindowInitContext): Promise<void> {
+  async afterReady(context: NonBrowserWindowInitContext): Promise<void> {
     if (!this.enabled) return;
 
     if (this.startupDelay > 0 && this.isAutoStartLaunch()) {
       context.log.info(
-        `[AutoStart] Boot launch detected — delaying ${this.startupDelay}s before loading content`
+        `[AutoStart] Boot launch detected — delaying ${this.startupDelay}s before window creation`
       );
       await new Promise(resolve => setTimeout(resolve, this.startupDelay * 1000));
     } else if (this.startupDelay > 0) {
