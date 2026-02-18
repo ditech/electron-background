@@ -1,4 +1,3 @@
-export * from './AutoStart';
 export * from './AutoUpdater';
 export * from './BrowserWindow';
 export * from './DevTools';

@@ -67,7 +67,6 @@ This ensures the rightmost values take precedence, with `closable: true` always 
 
 ### Built-in Plugins (src/):
 
-- **AutoStart** - Registers the app as a login item (in `afterLoad`) for automatic startup and optionally delays content loading on boot launches (in `beforeLoad`, Windows only). The window is already visible during the delay. Accepts `startupDelay` in options. Enabled when packaged
 - **AutoUpdater** - Checks for updates every 3 minutes using electron-updater. Requires `channel` in options. Enabled when packaged
 - **DevTools** - Installs browser extensions and opens DevTools. Accepts array of extensions to install. Enabled in development only
 - **DefaultBrowserWindow/KioskBrowserWindow/FullScreenBrowserWindow** - Configure window behavior. Kiosk mode enables fullscreen, always-on-top, and disables window controls
@@ -99,7 +98,7 @@ These settings are appropriate for kiosk-style applications but should be review
 ### Typical Usage Pattern
 
 ```typescript
-import { init, KioskBrowserWindow, AutoUpdater, AutoStart, DevTools } from '@dimensional-innovations/electron-background';
+import { init, KioskBrowserWindow, AutoUpdater, DevTools } from '@dimensional-innovations/electron-background';
 
 init({
   appUrl: process.env.DEV_URL || 'app://index.html',
@@ -107,7 +106,6 @@ init({
   plugins: [
     new KioskBrowserWindow(),
     new AutoUpdater({ channel: 'stable' }),
-    new AutoStart(),
     new DevTools([DevToolExtensions.VUEJS_DEVTOOLS]),
   ]
 });
