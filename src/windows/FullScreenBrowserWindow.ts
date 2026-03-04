@@ -1,4 +1,5 @@
 import { app, screen } from 'electron';
+import merge from 'lodash.merge';
 import { AppBrowserWindow, AppBrowserWindowConstructorOptions } from "./AppBrowserWindow";
 import { getTargetDisplay } from './util';
 
@@ -19,15 +20,7 @@ export interface FullScreenBrowserWindowConstructorOptions extends AppBrowserWin
 export class FullScreenBrowserWindow extends AppBrowserWindow {
 
   constructor({ screen: target = 'primary', ...options }: FullScreenBrowserWindowConstructorOptions, enabled = app.isPackaged) {
-    super({
-      ...(enabled ? {
-        alwaysOnTop: true,
-        resizable: false,
-        movable: false,
-        frame: false,
-      } : {}),
-      ...options,
-    });
+    super(merge(enabled ? { alwaysOnTop: true, resizable: false, movable: false, frame: false } : {}, options));
 
     if (enabled) {
       this.on('ready-to-show', async () => {

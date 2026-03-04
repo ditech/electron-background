@@ -31,7 +31,7 @@ The core of this library is the `init()` function (src/init.ts), which orchestra
 1. **beforeReady** - Runs before `app.whenReady()` resolves. Used for setup that must occur before Electron is ready (e.g., registering privileged schemes via `protocol.registerSchemesAsPrivileged`)
 2. **afterReady** - Runs after `app.whenReady()` but before any BrowserWindow is created. Used for setup requiring a ready app
 3. **beforeLoad** - Runs after each BrowserWindow is created but before loading the app URL. Used for installing extensions, setting up event handlers on the window
-4. **afterLoad** - Runs after the app URL is loaded into each window. Used for starting background services like auto-updater or heartbeat monitors
+4. **afterLoad** - Runs after the app URL is loaded into each window. Used for starting background services
 
 ### InitContext Object
 
@@ -47,7 +47,7 @@ Throughout the plugin lifecycle, plugins receive an `InitContext` object. It is 
 
 Windows are now class-based, extending `AppBrowserWindow` (src/windows/AppBrowserWindow.ts), which itself extends Electron's `BrowserWindow`. The `AppBrowserWindowConstructorOptions` interface extends `BrowserWindowConstructorOptions` with an additional required `appUrl` field. `AppBrowserWindow` stores `appUrl` internally and exposes a `loadApp()` method.
 
-`InitOptions.windows` accepts an array of tuples `[WindowClass, options]`, where each tuple pairs a window class constructor with its options. The `init()` function iterates this array, instantiates each window, runs the `beforeLoad`/`afterLoad` plugin phases for it, and calls `loadApp()`.
+`InitOptions.windows` accepts an array of window factory methods `() => WindowClass`, where each method instantiates a window. The `init()` function iterates this array, instantiates each window, runs the `beforeLoad`/`afterLoad` plugin phases for it, and calls `loadApp()`.
 
 ### Plugin Implementation Pattern
 
@@ -98,11 +98,11 @@ import { init, KioskBrowserWindow, AutoUpdater, DevTools, DevToolExtensions } fr
 
 init({
   windows: [
-    [KioskBrowserWindow, {
+    () => new KioskBrowserWindow({
       appUrl: process.env.DEV_URL || 'app://index.html',
       width: 1920,
       height: 1080,
-    }],
+    })
   ],
   plugins: [
     new AutoUpdater(undefined, { channel: 'stable' }),

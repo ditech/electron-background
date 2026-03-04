@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { InitContext, InitPlugin } from '../init';
+import { InitContext, InitPlugin, NonBrowserWindowInitContext } from '../init';
 import axios from 'axios';
 
 /**
@@ -34,7 +34,7 @@ export class Heartbeat implements InitPlugin {
     private readonly enabled: boolean = app.isPackaged,
   ) { }
 
-  public async afterLoad(context: InitContext): Promise<void> {
+  public async afterReady(context: NonBrowserWindowInitContext): Promise<void> {
     if (!this.enabled) return;
 
     const url = typeof this.options.url === 'string'
@@ -77,7 +77,7 @@ export class BetterStackHeartbeat implements InitPlugin {
     private readonly options: BetterStackHeartbeatOptions = {}
   ) { }
 
-  public async afterLoad(context: InitContext): Promise<void> {
+  public async afterReady(context: NonBrowserWindowInitContext): Promise<void> {
     const heartbeatApiKey = this.options.heartbeatApiKey;
 
     if (this.enabled && heartbeatApiKey && typeof heartbeatApiKey === 'string') {

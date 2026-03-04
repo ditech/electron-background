@@ -1,4 +1,5 @@
 import { app } from 'electron';
+import merge from 'lodash.merge';
 import { AppBrowserWindow, AppBrowserWindowConstructorOptions } from "./AppBrowserWindow";
 import { getTargetDisplay } from './util';
 
@@ -16,18 +17,17 @@ export interface KioskBrowserWindowConstructorOptions extends AppBrowserWindowCo
  */
 export class KioskBrowserWindow extends AppBrowserWindow {
   constructor({ screen: target = 'primary', ...options }: KioskBrowserWindowConstructorOptions, enabled = app.isPackaged) {
-    super({
-      ...(enabled ? {
-        acceptFirstMouse: true,
-        alwaysOnTop: true,
-        autoHideMenuBar: true,
-        fullscreen: true,
-        kiosk: true,
-        minimizable: false,
-        movable: false,
-        ...getTargetDisplay(target).bounds,
-      } : {}),
-      ...options,
-    });
+    super(merge(enabled ? {
+      acceptFirstMouse: true,
+      alwaysOnTop: true,
+      autoHideMenuBar: true,
+      fullscreen: true,
+      kiosk: true,
+      minimizable: false,
+      movable: false,
+      ...getTargetDisplay(target).bounds,
+    } : {},
+    options
+  ));
   }
 }

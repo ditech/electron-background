@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import electronLog from 'electron-log';
 import { autoUpdater } from 'electron-updater';
-import { BrowserWindowInitContext, InitPlugin } from '../init';
+import { InitPlugin, NonBrowserWindowInitContext } from '../init';
 
 /**
  * Options for configuring the AutoUpdater plugin.
@@ -31,7 +31,7 @@ export class AutoUpdater implements InitPlugin {
      private readonly options: AutoUpdaterOptions = {},
    ) { }
 
-  public async afterLoad({ log }: BrowserWindowInitContext): Promise<void> {
+  public async afterReady({ log }: NonBrowserWindowInitContext): Promise<void> {
     const { channel } = this.options;
     if (this.enabled && channel) {
       this.startAutoUpdater(channel);
