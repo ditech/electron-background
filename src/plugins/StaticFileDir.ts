@@ -28,7 +28,7 @@ export class StaticFileDir implements InitPlugin {
  * @param scheme - The scheme to register.
  * @param sourceDirectory - The directory where files are served from.
  */
-export function createFileProtocol(scheme: string, sourceDirectory: string): void {
+function createFileProtocol(scheme: string, sourceDirectory: string): void {
   protocol.registerFileProtocol(scheme, (request, respond) => {
     const requestPath = decodeURI(request.url.replace(`${scheme}://`, ''));
     const requestDir = dirname(requestPath);

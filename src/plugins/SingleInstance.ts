@@ -7,11 +7,12 @@ import { InitContext, InitPlugin } from '../init';
  * the first instance is brought back into focus.
  */
 export class SingleInstance implements InitPlugin {
-  public async beforeReady(): Promise<void> {
-    if(app.requestSingleInstanceLock()) return;
-
-    app.quit();
-    process.exit(0);
+  public beforeReady(): false {
+    if(!app.requestSingleInstanceLock()) {
+      app.quit();
+      process.exit(0);
+    }
+    return false;
   }
 
   public async afterReady(context: InitContext): Promise<void> {

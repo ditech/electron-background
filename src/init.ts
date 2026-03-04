@@ -41,10 +41,14 @@ export type BrowserWindowInitContext = Omit<InitContext, 'browserWindow'> & Requ
 export interface InitPlugin {
   /**
    * beforeReady is executed before the `app.whenReady()` promise resolves.
+   * beforeReady method must be synchronous so that all methods complete before the
+   * app.whenReady promise resolves.
    *
    * @param context - The current InitContext instance.
    */
-  beforeReady?(context: NonBrowserWindowInitContext): Promise<void>;
+  // Here we force the return type to be false. It's unused, but it will cause a type
+  // error if an implementation attempts to make the method async and return a promise.
+  beforeReady?(context: NonBrowserWindowInitContext): false;
 
   /**
    * afterReady is executed after the `app.whenReady()` promise resolves, but before the
@@ -128,7 +132,15 @@ export async function init({
 
   const context = new InitContext(log);
 
-  await runPluginPhase(plugins, 'beforeReady', context);
+  for (const plugin of plugins) {
+    if (plugin.beforeReady) {
+      try {
+        plugin.beforeReady(context);
+      } catch (err) {
+        context.log.error(`[init] Plugin "${getPluginName(plugin)}" threw during beforeReady:`, err);
+      }
+    }
+  }
 
   await app.whenReady();
 

@@ -27,8 +27,8 @@ export class AutoUpdater implements InitPlugin {
    * @param enabled - Indicates if the plugin is enabled. Used to disable the plugin in development. Defaults to `app.isPackaged`.
    */
    constructor(
-     private readonly enabled: boolean = app.isPackaged,
      private readonly options: AutoUpdaterOptions = {},
+     private readonly enabled: boolean = app.isPackaged,
    ) { }
 
   public async afterReady({ log }: NonBrowserWindowInitContext): Promise<void> {

@@ -5,7 +5,8 @@ import { InitPlugin } from '../init';
  * Enables touch events in the app.
  */
 export class TouchEvents implements InitPlugin {
-  public async afterReady(): Promise<void> {
+  public beforeReady(): false {
     app.commandLine.appendSwitch('touch-events', 'enabled');
+    return false;
   }
 }
