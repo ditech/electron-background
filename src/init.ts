@@ -105,13 +105,6 @@ async function runPluginPhase<T extends InitContext>(
   }
 }
 
-export function initWindow<C extends AppBrowserWindow>(
-  WindowClass: new (options: AppBrowserWindowConstructorOptions, ...args: any[]) => C,
-  ...args: ConstructorParameters<typeof WindowClass>
-) {
-  return () => new WindowClass(...args);
-}
-
 /**
  * Initializes the application, creating a browser window, and loads the provided app url.
  *
