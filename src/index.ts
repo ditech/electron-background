@@ -1,10 +1,13 @@
-export * from './AutoUpdater';
-export * from './BrowserWindow';
-export * from './DevTools';
-export * from './NodeHeartbeat';
-export * from './PrivilegedSchemes';
-export * from './SingleInstance';
-export * from './StaticFileDir';
-export * from './TouchEvents';
+export * from './plugins/AutoUpdater';
+export * from './plugins/DevTools';
+export * from './plugins/NodeHeartbeat';
+export * from './plugins/PrivilegedSchemes';
+export * from './plugins/SingleInstance';
+export * from './plugins/StaticFileDir';
+export * from './plugins/TouchEvents';
+
+export * from './windows/AppBrowserWindow';
+export * from './windows/FullScreenBrowserWindow';
+export * from './windows/KioskBrowserWindow';
 
 export * from './init';

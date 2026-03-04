@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { InitContext, InitPlugin } from './init';
+import { InitContext, InitPlugin } from '../init';
 import axios from 'axios';
 
 /**

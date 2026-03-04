@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import electronLog from 'electron-log';
 import { autoUpdater } from 'electron-updater';
-import { BrowserWindowInitContext, InitPlugin } from './init';
+import { BrowserWindowInitContext, InitPlugin } from '../init';
 
 /**
  * Options for configuring the AutoUpdater plugin.

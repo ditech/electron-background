@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { InitContext, InitPlugin } from './init';
+import { InitContext, InitPlugin } from '../init';
 
 /**
  * Enforces that only a single instance of the app can run at the same time.

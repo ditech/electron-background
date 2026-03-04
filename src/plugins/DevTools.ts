@@ -1,6 +1,6 @@
 import { app } from 'electron';
 import { BACKBONE_DEBUGGER, EMBER_INSPECTOR, ExtensionReference, installExtension, JQUERY_DEBUGGER, MOBX_DEVTOOLS, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS, VUEJS_DEVTOOLS } from 'electron-devtools-installer';
-import { BrowserWindowInitContext, InitPlugin } from './init';
+import { BrowserWindowInitContext, InitPlugin } from '../init';
 
 // Support backwards compatibility
 export type Extension = ExtensionReference;

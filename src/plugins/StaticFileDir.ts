@@ -1,6 +1,6 @@
 import { protocol } from 'electron';
 import { basename, dirname, join, normalize } from 'path';
-import { InitPlugin } from './init';
+import { InitPlugin } from '../init';
 
 /**
  * Registers a custom scheme to serve static files. 

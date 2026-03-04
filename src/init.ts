@@ -1,5 +1,6 @@
-import { app, BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
+import { app } from 'electron';
 import log from 'electron-log';
+import { AppBrowserWindow, AppBrowserWindowConstructorOptions } from './windows/AppBrowserWindow';
 
 /**
  * The context object passed to each plugin during the init process.
@@ -7,27 +8,16 @@ import log from 'electron-log';
 export class InitContext {
   constructor(
     /**
-     * The url used to load the application.
-     */
-    public appUrl: string,
-
-    /**
-     * Options used to create the BrowserWindow. These can be modified in `beforeReady` or
-     * `beforeLoad` methods to change the created BrowserWindow.
-     */
-    public browserWindowOptions: BrowserWindowConstructorOptions,
-
-    /**
      * The log instance. This should be used over `console` in plugin implementations.
      */
     public log: Pick<Console, 'error' | 'warn' | 'info' | 'debug'>,
-  ) { }
 
-  /**
-     * The main browser window that the app is loaded into. This is available in the context
-     * in the `beforeLoad` and `afterLoad` method.
+    /**
+     * The browser window that the app is loaded into. This is available in the context
+     * in the `beforeLoad` and `afterLoad` methods.
      */
-  public browserWindow?: BrowserWindow;
+  public browserWindow?: AppBrowserWindow,
+  ) { }
 }
 
 /**
@@ -66,7 +56,8 @@ export interface InitPlugin {
 
   /**
    * beforeLoad is executed after the browserWindow is created, but before the application
-   * has been loaded into the window.
+   * has been loaded into the window. This runs for each BrowserWindow created during init
+   * process.
    *
    * @param context - The current InitContext instance.
    */
@@ -74,6 +65,7 @@ export interface InitPlugin {
 
   /**
    * afterLoad is executed after the application has been loaded into the browserWindow.
+   * This runs for each BrowserWindow created during the init process.
    *
    * @param context - The current InitContext instance.
    */
@@ -82,14 +74,9 @@ export interface InitPlugin {
 
 export interface InitOptions {
   /**
-   * The url to load once the the app has been created.
+   * The windows to create during the init process.
    */
-  appUrl: string;
-
-  /**
-   * The default browser window options
-   */
-  browserWindowOptions?: BrowserWindowConstructorOptions;
+  windows: Array<[{ new (options: AppBrowserWindowConstructorOptions): AppBrowserWindow }, AppBrowserWindowConstructorOptions]>;
 
   /**
    * The list of plugins to load with the application.
@@ -101,11 +88,10 @@ function getPluginName(plugin: InitPlugin): string {
   return plugin.constructor?.name || 'UnknownPlugin';
 }
 
-async function runPluginPhase<T>(
+async function runPluginPhase<T extends InitContext>(
   plugins: Array<InitPlugin>,
   phase: keyof InitPlugin,
   context: T,
-  logger: Pick<Console, 'error' | 'warn' | 'info' | 'debug'>,
 ): Promise<void> {
   for (const plugin of plugins) {
     const method = plugin[phase];
@@ -113,7 +99,7 @@ async function runPluginPhase<T>(
       try {
         await (method as (ctx: T) => Promise<void>).call(plugin, context);
       } catch (err) {
-        logger.error(`[init] Plugin "${getPluginName(plugin)}" threw during ${phase}:`, err);
+        context.log.error(`[init] Plugin "${getPluginName(plugin)}" threw during ${phase}:`, err);
       }
     }
   }
@@ -126,10 +112,13 @@ async function runPluginPhase<T>(
  * @returns - The final state of the init context, including the created browser window for additional setup.
  */
 export async function init({
-  appUrl,
-  browserWindowOptions = { height: 1920, width: 1080, backgroundColor: '#000' },
+  windows,
   plugins = [],
-}: InitOptions): Promise<InitContext> {
+}: InitOptions): Promise<void> {
+  if (windows.length === 0) {
+    throw new Error('At least 1 window must be defined.');
+  } 
+
   process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
   app.on('window-all-closed', app.quit);
   process.on('message', (data) => {
@@ -137,31 +126,27 @@ export async function init({
   });
   process.on('SIGTERM', app.quit);
 
-  const context = new InitContext(appUrl, browserWindowOptions, log);
+  const context = new InitContext(log);
 
-  await runPluginPhase(plugins, 'beforeReady', context, log);
+  await runPluginPhase(plugins, 'beforeReady', context);
 
   await app.whenReady();
 
-  await runPluginPhase(plugins, 'afterReady', context, log);
+  await runPluginPhase(plugins, 'afterReady', context);
 
-  context.browserWindow = new BrowserWindow(context.browserWindowOptions);
+  for (const [WindowClass, options] of windows) {
+    const window = new WindowClass(options);
+    const windowContext = new InitContext(context.log, window) as BrowserWindowInitContext;
 
-  await runPluginPhase(plugins, 'beforeLoad', context as BrowserWindowInitContext, log);
+    await runPluginPhase(plugins, 'beforeLoad', windowContext);
 
-  try {
-    await context.browserWindow.loadURL(context.appUrl);
-  } catch (err) {
-    log.error('[init] Failed to load app URL:', err);
+    try {
+      await windowContext.browserWindow.loadApp();
+    }
+    catch (err) {
+      log.error('[init] Failed to load app URL:', err);
+    }
+
+    await runPluginPhase(plugins, 'afterLoad', windowContext);
   }
-
-  if (context.browserWindow && !context.browserWindow.isDestroyed() && !context.browserWindow.isVisible()) {
-    context.browserWindow.show();
-  }
-
-  await runPluginPhase(plugins, 'afterLoad', context as BrowserWindowInitContext, log);
-
-  context.browserWindow.on('closed', () => context.browserWindow = undefined);
-
-  return context;
 }
