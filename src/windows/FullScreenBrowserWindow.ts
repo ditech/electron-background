@@ -1,24 +1,36 @@
-import { app } from 'electron';
+import { app, screen } from 'electron';
 import { AppBrowserWindow, AppBrowserWindowConstructorOptions } from "./AppBrowserWindow";
+import { getTargetDisplay } from './util';
+
+export interface FullScreenBrowserWindowConstructorOptions extends AppBrowserWindowConstructorOptions {
+  /**
+   * The screen the window should occupy. Use 'primary' for the primary display,
+   * 'secondary' for the first non-primary display, or a number for the display
+   * at that index in the list returned by screen.getAllDisplays(). Defaults to 'primary'.
+   */
+  screen?: 'primary' | 'secondary' | number;
+}
 
 export class FullScreenBrowserWindow extends AppBrowserWindow {
-  
-  constructor(options: AppBrowserWindowConstructorOptions) {
+
+  constructor({ screen: target = 'primary', ...options }: FullScreenBrowserWindowConstructorOptions, enabled = app.isPackaged) {
     super({
-      alwaysOnTop: true,
-      resizable: false,
-      movable: false,
-      frame: false,
+      ...(enabled ? {
+        alwaysOnTop: true,
+        resizable: false,
+        movable: false,
+        frame: false,
+      } : {}),
       ...options,
     });
 
-    if (app.isPackaged) {
+    if (enabled) {
       this.on('ready-to-show', async () => {
-        const { screen } = await import('electron');
-
         const resizeWindow = () => {
-          this.setBounds(screen.getPrimaryDisplay().bounds);
+          const targetDisplay = getTargetDisplay(target);
+          this.setBounds(targetDisplay.bounds);
         };
+        
         resizeWindow();
 
         screen.on('display-added', resizeWindow);

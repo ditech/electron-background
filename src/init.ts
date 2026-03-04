@@ -76,7 +76,7 @@ export interface InitOptions {
   /**
    * The windows to create during the init process.
    */
-  windows: Array<[{ new (options: AppBrowserWindowConstructorOptions): AppBrowserWindow }, AppBrowserWindowConstructorOptions]>;
+  windows: Array<() => AppBrowserWindow>;
 
   /**
    * The list of plugins to load with the application.
@@ -103,6 +103,13 @@ async function runPluginPhase<T extends InitContext>(
       }
     }
   }
+}
+
+export function initWindow<C extends AppBrowserWindow>(
+  WindowClass: new (options: AppBrowserWindowConstructorOptions, ...args: any[]) => C,
+  ...args: ConstructorParameters<typeof WindowClass>
+) {
+  return () => new WindowClass(...args);
 }
 
 /**
@@ -134,8 +141,8 @@ export async function init({
 
   await runPluginPhase(plugins, 'afterReady', context);
 
-  for (const [WindowClass, options] of windows) {
-    const window = new WindowClass(options);
+  for (const windowFactory of windows) {
+    const window = windowFactory();
     const windowContext = new InitContext(context.log, window) as BrowserWindowInitContext;
 
     await runPluginPhase(plugins, 'beforeLoad', windowContext);
