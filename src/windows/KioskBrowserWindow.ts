@@ -1,4 +1,4 @@
-import { app, screen } from 'electron';
+import { app } from 'electron';
 import { AppBrowserWindow, AppBrowserWindowConstructorOptions } from "./AppBrowserWindow";
 import { getTargetDisplay } from './util';
 
@@ -11,6 +11,9 @@ export interface KioskBrowserWindowConstructorOptions extends AppBrowserWindowCo
   screen?: 'primary' | 'secondary' | number;
 }
 
+/**
+ * Enables kiosk mode in the BrowserWindow when the application is packaged.
+ */
 export class KioskBrowserWindow extends AppBrowserWindow {
   constructor({ screen: target = 'primary', ...options }: KioskBrowserWindowConstructorOptions, enabled = app.isPackaged) {
     super({

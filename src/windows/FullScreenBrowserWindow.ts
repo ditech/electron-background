@@ -11,6 +11,11 @@ export interface FullScreenBrowserWindowConstructorOptions extends AppBrowserWin
   screen?: 'primary' | 'secondary' | number;
 }
 
+/**
+ * Ensures the browser window will always be fullscreen. Generally, KioskBrowserWindow is preferred
+ * over this window. However in cases where there are multiple windows, or a window needs to span
+ * multiple screens, the FullScreenBrowserWindow can be a better fit.
+ */
 export class FullScreenBrowserWindow extends AppBrowserWindow {
 
   constructor({ screen: target = 'primary', ...options }: FullScreenBrowserWindowConstructorOptions, enabled = app.isPackaged) {
