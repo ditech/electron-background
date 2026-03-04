@@ -11,3 +11,5 @@ export * from './windows/FullScreenBrowserWindow';
 export * from './windows/KioskBrowserWindow';
 
 export * from './init';
+export * from './InitContext';
+export * from './InitPlugin';

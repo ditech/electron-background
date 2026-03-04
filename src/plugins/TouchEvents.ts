@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { InitPlugin } from '../init';
+import { InitPlugin } from '../InitPlugin';
 
 /**
  * Enables touch events in the app.
