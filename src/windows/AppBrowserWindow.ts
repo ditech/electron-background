@@ -33,7 +33,7 @@ export class AppBrowserWindow extends BrowserWindow {
    * 
    * @returns - A promise that is resolved as the app is loaded.
    */
-  public loadApp(): Promise<void> {
-    return this.loadURL(this.appUrl);
+  public async loadApp(): Promise<void> {
+    return await this.loadURL(this.appUrl);
   }
 }
