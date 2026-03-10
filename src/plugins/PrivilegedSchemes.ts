@@ -1,5 +1,5 @@
 import { protocol } from 'electron';
-import { InitPlugin } from '../init';
+import { InitPlugin } from '../InitPlugin';
 
 /**
  * Registers schemes as privileged.
