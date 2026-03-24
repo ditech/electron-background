@@ -65,7 +65,7 @@ export interface BetterStackHeartbeatOptions {
 /**
  * Starts a "heartbeat" by sending a request to https://betterstack.com on an interval. Requires the apiKey to be in the app config.
  */
-export class BetterStackHeartbeat<T extends { heartbeatApiKey: string }> implements InitPlugin<T> {
+export class BetterStackHeartbeat<T extends { heartbeatApiKey?: string }> implements InitPlugin<T> {
 
   /**
    * @constructor

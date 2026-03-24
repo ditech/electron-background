@@ -19,7 +19,7 @@ export const DevToolExtensions = {
 /**
  * Installs dev tools extensions and opens the devTools panel.
  */
-export class DevTools<T> implements InitPlugin<T> {
+export class DevTools implements InitPlugin<unknown> {
   /**
    * @constructor
    * 
@@ -31,7 +31,7 @@ export class DevTools<T> implements InitPlugin<T> {
     private readonly enabled: boolean = !app.isPackaged,
   ) { }
 
-  public async beforeLoad({ browserWindow }: BrowserWindowInitContext<T>): Promise<void> {
+  public async beforeLoad({ browserWindow }: BrowserWindowInitContext<unknown>): Promise<void> {
     if (!this.enabled) {
       return;
     }

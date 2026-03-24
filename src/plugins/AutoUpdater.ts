@@ -21,7 +21,7 @@ export interface AutoUpdaterOptions {
  *
  * For more info, see https://www.electron.build/auto-update
  */
-export class AutoUpdater<T extends { autoUpdateChannel: string }> implements InitPlugin<T> {
+export class AutoUpdater<T extends { autoUpdateChannel?: string }> implements InitPlugin<T> {
   /**
    * @constructor
    * 
