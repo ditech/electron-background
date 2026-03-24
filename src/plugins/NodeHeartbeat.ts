@@ -1,6 +1,7 @@
 import { app } from 'electron';
-import { InitContext, InitPlugin } from './init';
 import axios from 'axios';
+import { InitContext, NonBrowserWindowInitContext } from '../InitContext';
+import { InitPlugin } from '../InitPlugin';
 
 /**
  * Options used to define the request used to monitor the app.
@@ -21,7 +22,7 @@ export interface HeartbeatOptions {
 /**
  * Starts a "heartbeat", which sends a request to the provided url on an interval.
  */
-export class Heartbeat implements InitPlugin {
+export class Heartbeat<T> implements InitPlugin<T> {
 
   /**
    * @constructor
@@ -34,7 +35,7 @@ export class Heartbeat implements InitPlugin {
     private readonly enabled: boolean = app.isPackaged,
   ) { }
 
-  public async afterLoad(context: InitContext): Promise<void> {
+  public async afterReady(context: NonBrowserWindowInitContext<T>): Promise<void> {
     if (!this.enabled) return;
 
     const url = typeof this.options.url === 'string'
@@ -64,7 +65,7 @@ export interface BetterStackHeartbeatOptions {
 /**
  * Starts a "heartbeat" by sending a request to https://betterstack.com on an interval. Requires the apiKey to be in the app config.
  */
-export class BetterStackHeartbeat implements InitPlugin {
+export class BetterStackHeartbeat<T extends { heartbeatApiKey: string }> implements InitPlugin<T> {
 
   /**
    * @constructor
@@ -77,8 +78,8 @@ export class BetterStackHeartbeat implements InitPlugin {
     private readonly options: BetterStackHeartbeatOptions = {}
   ) { }
 
-  public async afterLoad(context: InitContext): Promise<void> {
-    const heartbeatApiKey = this.options.heartbeatApiKey;
+  public async afterReady(context: NonBrowserWindowInitContext<T>): Promise<void> {
+    const heartbeatApiKey = this.options.heartbeatApiKey || context.config.heartbeatApiKey;
 
     if (this.enabled && heartbeatApiKey && typeof heartbeatApiKey === 'string') {
       const url = this.options.isBetterStack

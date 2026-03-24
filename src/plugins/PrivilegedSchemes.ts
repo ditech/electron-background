@@ -1,5 +1,5 @@
 import { protocol } from 'electron';
-import { InitPlugin } from './init';
+import { InitPlugin } from '../InitPlugin';
 
 /**
  * Registers schemes as privileged.
@@ -12,12 +12,14 @@ export class PrivilegedSchemes implements InitPlugin {
    */
   constructor(private readonly schemes: Array<string>) { }
 
-  public async beforeReady(): Promise<void> {
+  public beforeReady(): false {
     const customSchemes = this.schemes
       .map((scheme) => ({
         scheme,
         privileges: { secure: true, standard: true, supportFetchAPI: true },
       }));
     protocol.registerSchemesAsPrivileged(customSchemes);
+
+    return false;
   }
 }

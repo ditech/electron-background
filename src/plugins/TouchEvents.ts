@@ -1,11 +1,12 @@
 import { app } from 'electron';
-import { InitPlugin } from './init';
+import { InitPlugin } from '../InitPlugin';
 
 /**
  * Enables touch events in the app.
  */
 export class TouchEvents implements InitPlugin {
-  public async afterReady(): Promise<void> {
+  public beforeReady(): false {
     app.commandLine.appendSwitch('touch-events', 'enabled');
+    return false;
   }
 }

@@ -1,6 +1,7 @@
 import { app } from 'electron';
 import { BACKBONE_DEBUGGER, EMBER_INSPECTOR, ExtensionReference, installExtension, JQUERY_DEBUGGER, MOBX_DEVTOOLS, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS, VUEJS_DEVTOOLS } from 'electron-devtools-installer';
-import { BrowserWindowInitContext, InitPlugin } from './init';
+import { InitPlugin } from '../InitPlugin';
+import { BrowserWindowInitContext } from '../InitContext';
 
 // Support backwards compatibility
 export type Extension = ExtensionReference;
@@ -18,7 +19,7 @@ export const DevToolExtensions = {
 /**
  * Installs dev tools extensions and opens the devTools panel.
  */
-export class DevTools implements InitPlugin {
+export class DevTools<T> implements InitPlugin<T> {
   /**
    * @constructor
    * 
@@ -30,7 +31,7 @@ export class DevTools implements InitPlugin {
     private readonly enabled: boolean = !app.isPackaged,
   ) { }
 
-  public async beforeLoad({ browserWindow }: BrowserWindowInitContext): Promise<void> {
+  public async beforeLoad({ browserWindow }: BrowserWindowInitContext<T>): Promise<void> {
     if (!this.enabled) {
       return;
     }
