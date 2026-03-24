@@ -100,7 +100,7 @@ build:
 # Publish package
 
 deploy_npm_publish:
-  stage: release
+  stage: deploy
   rules:
     - if: $CI_COMMIT_TAG
   variables:
@@ -116,7 +116,7 @@ deploy_npm_publish:
     - npm publish --access public
 
 deploy_gitlab_publish:
-  stage: release
+  stage: deploy
   rules:
     - if: $CI_COMMIT_TAG
   script:
