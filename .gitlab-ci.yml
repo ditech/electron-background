@@ -107,7 +107,7 @@ deploy_npm_publish:
       aud: SIGSTORE_ID_TOKEN
   script:
     - npm version --no-git-tag-version --new-version $CI_COMMIT_TAG --force --allow-same-version
-    - npm publish --access public
+    - npm publish --provenance
 
 deploy_gitlab_publish:
   stage: deploy
