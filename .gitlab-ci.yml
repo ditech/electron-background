@@ -104,7 +104,7 @@ deploy_npm_publish:
     NPM_ID_TOKEN:
       aud: "npm:registry.npmjs.org"
     SIGSTORE_ID_TOKEN:
-      aud: SIGSTORE_ID_TOKEN
+      aud: sigstore
   script:
     - npm version --no-git-tag-version --new-version $CI_COMMIT_TAG --force --allow-same-version
     - npm publish --provenance
