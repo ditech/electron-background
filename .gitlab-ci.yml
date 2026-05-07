@@ -1,3 +1,9 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_MESSAGE !~ /^v\d+\.\d+\.\d+/
+    - if: $CI_COMMIT_TAG
+
 stages:
   - install
   - validate
@@ -9,7 +15,7 @@ stages:
 # --- DEFAULTS ---
 
 default:
-  image: node:20.19.5
+  image: node:24
   cache:
     key:
       files:
@@ -24,9 +30,7 @@ default:
 install:
   stage: install
   rules:
-    - if: $CI_COMMIT_TAG
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - when: always
   script:
     - git config --global user.email "ci@dimin.com"
     - git config --global user.name "CI/CD"
@@ -51,10 +55,7 @@ validate_lint:
   rules:
     - if: $CI_COMMIT_TAG
       allow_failure: true
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      allow_failure: false
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      allow_failure: false
+    - when: always
   script:
     - yarn lint
 
@@ -63,10 +64,7 @@ validate_audit:
   rules:
     - if: $CI_COMMIT_TAG
       allow_failure: true
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      allow_failure: true
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      allow_failure: true
+    - when: always
   script:
     - |
       set +e
@@ -85,9 +83,7 @@ validate_audit:
 build:
   stage: build
   rules:
-    - if: $CI_COMMIT_TAG
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - when: always
   script:
     - yarn build
   artifacts:
@@ -103,15 +99,13 @@ deploy_npm_publish:
   stage: deploy
   rules:
     - if: $CI_COMMIT_TAG
-  variables:
-    NPM_TOKEN: $NPM_TOKEN
+    - when: never
+  id_tokens:
+    NPM_ID_TOKEN:
+      aud: "npm:registry.npmjs.org"
+    SIGSTORE_ID_TOKEN:
+      aud: SIGSTORE_ID_TOKEN
   script:
-    - |
-      {
-        echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'
-      } >> .npmrc
-    - git config --global user.email ci-cd@dimin.com
-    - git config --global user.name "Dimensional Innovations"
     - npm version --no-git-tag-version --new-version $CI_COMMIT_TAG --force --allow-same-version
     - npm publish --access public
 
@@ -119,6 +113,7 @@ deploy_gitlab_publish:
   stage: deploy
   rules:
     - if: $CI_COMMIT_TAG
+    - when: never
   script:
     - |
       {
@@ -139,6 +134,7 @@ release_gitlab:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   rules:
     - if: $CI_COMMIT_TAG
+    - when: never
   before_script:
     - apk add --no-cache git curl
     - curl -sSL https://github.com/orhun/git-cliff/releases/download/v2.12.0/git-cliff-2.12.0-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /tmp
